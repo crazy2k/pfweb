@@ -31,30 +31,42 @@
 #end if
 <p>
 
-<h4>Estas cursando:</h4>
-<ul>
-#for $mat in $cursando
-	<li>$mat[0]: $mat[1]</li>
-#end for
-</ul>
-<p>
+#if $cursando
+	<h4>Estas cursando:</h4>
+	<ul>
+	#for $mat in $cursando
+		<li>$mat[0]: $mat[1]</li>
+	#end for
+	</ul>
+	<p>
+#else
+	<h4>No estas cursando materias.</h4>
+#end if
 
-<h4>Podes cursar:</h4>
-<ul>
-#for $mat in $para_cursar
-	<li>$mat[0]: $mat[1]</li>
-#end for
-</ul>
-<p>
+#if $para_cursar
+	<h4>Podes cursar:</h4>
+	<ul>
+	#for $mat in $para_cursar
+		<li>$mat[0]: $mat[1]</li>
+	#end for
+	</ul>
+	<p>
+#else
+	<h4>Las correlatividades no te permiten cursar otras materias.</h4>
+#end if
 
-<h4>Tenes aprobadas:</h4>
-<ul>
-#for $mat in $aprobadas
-	<li>$mat[0]: $mat[2] <b>($mat[1])</b></li>
-#end for
-</ul>
+#if $aprobadas
+	<h4>Tenes aprobadas:</h4>
+	<ul>
+	#for $mat in $aprobadas
+		<li>$mat[0]: $mat[2] <b>($mat[1])</b></li>
+	#end for
+	</ul>
+	<p>
+#else
+	<h4>No tenes materias aprobadas.</h4>
+#end if
 
-<p>
 
 #include "footer.html"
 
