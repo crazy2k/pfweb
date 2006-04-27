@@ -10,9 +10,10 @@
 #end if
 
 <form method=POST action="corregirnota">
-Si te cambiaron la nota, o la pasaste mal aca, podes corregirla.<p>
+Si te cambiaron la nota o la pasaste mal aca, podes corregirla siguiendo las
+instrucciones.<p>
 
-<b>1.</b>Primero, elegi la materia:<br>
+<b>1.</b> Primero, elegi la materia:<br>
 <select name="cod">
 #for $mat in $materias:
 	#if not $aprobadas.has_key($mat[0])
