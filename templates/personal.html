@@ -1,0 +1,46 @@
+
+#set title = 'Datos personales'
+#include "header.html"
+
+<h1>$title</h1>
+
+#include "navbar.html"
+
+#if $action_ok == "1"
+	<div class="message">Tus datos se grabaron sin problemas</div>
+#else if $action_ok == "2"
+	<div class="message">Hubo un error grabando tus datos</div>
+#end if
+
+
+<table border="0" cellspacing=0><p>
+<form method=POST action="personal">
+<tr>
+	<td>Nombre:</td>
+	<td><input type=text name=nombre size=30 value="$personal.nombre"></td>
+</tr><tr>
+	<td>Padrón:</td>
+	<td><input type=text name=padron size=8 value="$personal.padron"></td>
+</tr><tr>
+	<td>Orientación:</td>
+	<td><select name=area>
+	#for $area in $areas
+		#if $area[0] == 'COMUN'
+			#continue
+		#else if $personal.area == $area[0]
+			<option selected value="$area[0]">$area[1]</option>
+		#else
+			<option value="$area[0]">$area[1]</option>
+		#end if
+	#end for
+	</select></td>
+</tr><tr>
+	<td colspan=2 align=center>
+	<input type=submit value="Actualizar datos">
+	</td>
+</tr>
+</form>
+</table>
+
+#include "footer.html"
+

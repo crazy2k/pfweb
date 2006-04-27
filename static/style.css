@@ -1,0 +1,62 @@
+
+body {
+	font-family: sans-serif;
+	color:#000000;
+	background-color: #E9F8E9;
+	font-size: small;
+	margin: 0pt;
+}
+
+div.main {
+	margin: 1% 12% 1% 12%;
+	padding: 0em 20pt 1em 20pt;
+	border: solid 1px #ADA;
+	background: #FFFFFF;
+}
+
+div.navbar {
+	background-color: #F0F0F0;
+	font-size: x-small;
+}
+
+div.message {
+	color: #F00;
+}
+
+h1 {
+	font-size: x-large;
+	padding-left: 10px;
+	background-color: #d2e9ff;
+	border: 1px dotted #01a2ed;
+}
+
+h2 {
+	font-size: large;
+	color: #2b8fc5;
+	border-bottom: 1px solid #CCC;
+}
+
+a {
+	text-decoration:none;
+	color: #4322FF;
+}
+
+a:hover {
+	text-decoration:underline;
+	color: #c00;
+}
+
+tt {
+	color: #000;
+	background:#eee;
+}
+
+div.rbar {
+	float: right;
+	margin-top: 2em;
+	margin-bottom: 1em;
+	margin-left: 1em;
+	text-align: right;
+	clear: right;
+}
+

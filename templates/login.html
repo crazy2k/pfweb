@@ -1,0 +1,44 @@
+
+#set title = 'planifi'
+#include "header.html"
+
+<h1>$title</h1>
+
+<div class="navbar">
+<!-- La barra de navegacion esta vacia en el login -->
+</div>
+
+#if $failed
+Usuario y/o clave invalidos. Por favor intentá nuevamente.<p>
+#end if
+
+#if $register_ok
+Tu registración se completo sin problemas. Ahora ingresá el usuario y la clave
+que elegiste debajo, para comenzar a usar planifi!<br>
+<hr>
+<p>
+#end if
+
+Hola! Por favor ingresa tu usuario y tu clave.<p>
+
+<table border="0" cellspacing=0><p>
+<form method="POST" action="/auth">
+<tr>
+	<td>Usuario:</td>
+	<td><input type=text tabindex=0 name="user" size=10></td>
+</tr><tr>
+	<td>Clave:</td>
+	<td><input type=password name="passwd" size=10></td>
+</tr><tr>
+	<td colspan=2 align=center><input type=submit value="Entrar"></td>
+</tr>
+</form>
+</table>
+
+<p>
+Si no tenes un usuario y una clave, podes <a href="register">registrarte
+aca</a>.<p>
+
+
+#include "footer.html"
+

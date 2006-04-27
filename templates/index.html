@@ -1,0 +1,60 @@
+
+#set title = 'Principal'
+#include "header.html"
+
+<h1>$title</h1>
+
+#include "navbar.html"
+
+#if $personal.nombre
+	Hola $personal.nombre!<p>
+#else
+	Hola $personal.username!<p>
+#end if
+
+#if $area_desc:
+	Estas estudiando $carrera_desc, orientacion $area_desc.<br>
+#else
+	Estas estudiando $carrera_desc.<br>
+#end if
+
+#if $inicio
+	Arrancaste la carrera el $inicio[0]/$inicio[1]/$inicio[2].<br>
+#end if
+
+#if $personal.padron
+	Tu padrón es $personal.padron.<br>
+#end if
+
+#if $promedio
+	Tu promedio (sin aplazos) es $promedio.<br>
+#end if
+<p>
+
+<h4>Estas cursando:</h4>
+<ul>
+#for $mat in $cursando
+	<li>$mat[0]: $mat[1]</li>
+#end for
+</ul>
+<p>
+
+<h4>Podes cursar:</h4>
+<ul>
+#for $mat in $para_cursar
+	<li>$mat[0]: $mat[1]</li>
+#end for
+</ul>
+<p>
+
+<h4>Tenes aprobadas:</h4>
+<ul>
+#for $mat in $aprobadas
+	<li>$mat[0]: $mat[2] <b>($mat[1])</b></li>
+#end for
+</ul>
+
+<p>
+
+#include "footer.html"
+

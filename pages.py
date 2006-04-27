@@ -1,0 +1,150 @@
+
+import server
+import web
+
+class login:
+	def GET(self):
+		i = web.input(failed = 0, register_ok = 0)
+		failed = i.failed
+		register_ok = i.register_ok
+		web.render('login.html')
+
+
+class auth:
+	def POST(self):
+		i = web.input('user', 'passwd')
+		sid = server.auth(i.user, i.passwd)
+		if not sid:
+			return web.redirect("login?failed=1")
+		web.setcookie('sid', sid)
+		web.redirect("index")
+
+
+class logout:
+	def GET(self):
+		sid = web.cookies('sid')['sid']
+		web.setcookie('sid', '')
+		web.redirect("login")
+
+class index:
+	def GET(self):
+		sid = web.cookies('sid')['sid']
+
+		personal = server.get_personal(sid)
+		inicio = personal['inicio']
+		carrera_desc = server.get_carreras()[personal['carrera']]
+		areas = server.get_areas(personal['carrera'])
+		area_desc = areas[personal['area']]
+		del areas
+
+		cursando = server.get_cursando(sid).items()
+		cursando.sort()
+
+		para_cursar = server.get_para_cursar(sid).items()
+		para_cursar.sort()
+
+		apro_dict = server.get_aprobadas(sid)
+		promedio = 0.0
+		aprobadas = []
+		for key in apro_dict:
+			aprobadas.append([key] + apro_dict[key])
+			promedio += apro_dict[key][0]
+		del apro_dict
+		if len(aprobadas):
+			promedio = promedio / len(aprobadas)
+		promedio = "%.2f" % promedio
+
+		web.render('index.html')
+
+
+class setmateria:
+	def GET(self):
+		sid = web.cookies('sid')['sid']
+
+		# para cuando confirmamos que anduvo todo bien, se usa en el
+		# template nomas
+		i = web.input(action_ok = 0)
+		action_ok = i.action_ok
+
+		personal = server.get_personal(sid)
+		materias = server.get_materias(personal['carrera'], "")
+		materias = materias.items()
+		materias.sort()
+		aprobadas = server.get_aprobadas(sid)
+
+		web.render('setmateria.html')
+
+	def POST(self):
+		sid = web.cookies('sid')['sid']
+		i = web.input('cod', 'nota')
+
+		ret = server.set_estado_materia(sid, i.cod, int(i.nota))
+		if not ret:
+			return web.redirect('setmateria?action_ok=2')
+		web.redirect('setmateria?action_ok=1')
+
+
+class personal:
+	def GET(self):
+		sid = web.cookies('sid')['sid']
+
+		i = web.input(action_ok = 0)
+		action_ok = i.action_ok
+
+		personal = server.get_personal(sid)
+
+		areas = server.get_areas(personal['carrera']).items()
+
+		web.render("personal.html")
+
+	def POST(self):
+		sid = web.cookies('sid')['sid']
+		i = web.input(nombre = '', padron = '', area = '')
+
+		personal = server.get_personal(sid)
+		personal['nombre'] = i.nombre
+		personal['padron'] = i.padron
+		personal['area'] = i.area
+		ret = server.set_personal(sid, personal)
+
+		if not ret:
+			return web.redirect('personal?action_ok=2')
+		web.redirect('personal?action_ok=1')
+
+
+class register:
+	def GET(self):
+		i = web.input(error = 0)
+		error = i.error
+
+		carreras = server.get_carreras().items()
+		web.render("register.html")
+
+	def POST(self):
+		i = web.input('username', 'passwd', 'carrera',
+				'inid', 'inim', 'iniy',
+				nombre = '', padron = '')
+
+		ret = server.register(i.username, i.passwd)
+		if ret != 0:
+			return web.redirect('register?error=1')
+
+		sid = server.auth(i.username, i.passwd)
+		personal = server.get_personal(sid)
+		personal['nombre'] = i.nombre
+		personal['padron'] = i.padron
+		personal['carrera'] = i.carrera
+		personal['hace_tesis'] = 0
+		personal['inicio'] = (int(i.inid), int(i.inim), int(i.iniy))
+		personal['area'] = server.get_areas(i.carrera).keys()[0]
+		ret = server.set_personal(sid, personal)
+		if not ret:
+			print personal
+			print ret
+			return
+			return web.redirect('register?error=2')
+		web.redirect('login?register_ok=1')
+
+
+
+
