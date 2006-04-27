@@ -11,6 +11,7 @@ urls = (
 	'/logout',		'pages.logout',
 	'/index',		'pages.index',
 	'/setmateria',		'pages.setmateria',
+	'/corregirnota',	'pages.corregirnota',
 	'/personal',		'pages.personal',
 	'/register',		'pages.register',
 )

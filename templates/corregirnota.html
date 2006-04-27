@@ -1,0 +1,41 @@
+
+#set title = 'Corregir una nota'
+#include "header.html"
+
+
+#if $action_ok == "1"
+	<div class="message">La materia fue grabada sin problemas</div><p>
+#else if $action_ok == "2"
+	<div class="message">Hubo un error grabando la materia</div><p>
+#end if
+
+<form method=POST action="corregirnota">
+Si te cambiaron la nota, o la pasaste mal aca, podes corregirla.<p>
+
+<b>1.</b>Primero, elegi la materia:<br>
+<select name="cod">
+#for $mat in $materias:
+	#if not $aprobadas.has_key($mat[0])
+		#continue
+	#end if
+	<option value="$mat[0]">$mat[0]: $mat[1] ($aprobadas[$mat[0]][0])
+	</option>
+#end for
+</select><p>
+
+<b>2.</b> Y ahora ingresa tu nueva nota, o bien indicá si no la cursaste nunca o la esas
+cursando:<br>
+<select name="nota">
+	<option value="-2">No la curse nunca</option>
+	<option value="-1">La estoy cursando</option>
+#for i in range(4, 11):
+	<option>$i</option>
+#end for
+</select>
+<p>
+
+<b>3.</b> Para terminar, apretá <input type=submit value="Corregir">.
+</form><p>
+
+#include "footer.html"
+
