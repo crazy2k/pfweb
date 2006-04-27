@@ -80,12 +80,33 @@ tt {
 }
 
 
-div.rbar {
-	float: right;
-	margin-top: 2em;
-	margin-bottom: 1em;
-	margin-left: 1em;
-	text-align: right;
-	clear: right;
+li.aprobada {
+	color: green;
+}
+
+li.cursando {
+	color: blue;
+}
+
+
+table.matlist {
+	border: none;
+	border-collapse: collapse;
+}
+
+tr.aprobada {
+	background: #D0F0D0;
+}
+
+tr.cursando {
+	background: #D0D0F0;
+}
+
+td.matlist {
+	border-right: solid 1px;
+	padding: 6pt 6pt 0pt 6pt;
+}
+td.matlist:last-child {
+	border-right: none;
 }
 

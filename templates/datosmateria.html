@@ -1,0 +1,47 @@
+
+#set title = 'Datos de una materia'
+#include "header.html"
+
+#if $info
+
+<h2>$info.codigo: $info.desc</h2>
+
+Créditos: $info.creditos<br>
+
+#if $correlativas
+	Correlativas:
+	<ul>
+	#for $cor in $correlativas
+		#if $cor[0] in $personal.aprobadas.keys():
+			<li class=aprobada>$cor[0]: $cor[1]</li>
+		#else if $cor[0] in $personal.cursando:
+			<li class=cursando>$cor[0]: $cor[1]</li>
+		#else
+			<li>$cor[0]: $cor[1]</li>
+		#end if
+	#end for
+	</ul>
+#else
+	Esta materia no tiene correlativas.<br>
+#end if
+
+<p>
+
+<h2>Nueva consulta</h2>
+
+#end if
+
+
+<form method=POST action="datosmateria">
+Elegí la materia de la cual queres obtener información:<br>
+<select name="cod">
+#for $mat in $materias:
+	<option value="$mat[0]">$mat[0]: $mat[1]</option>
+#end for
+</select><p>
+
+Para terminar, apretá <input type=submit value="Consultar">
+</form><p>
+
+#include "footer.html"
+

@@ -20,6 +20,9 @@ def get_materias(carrera, area):
 def get_correlativas(carrera, materia):
 	return conn.get_correlativas(carrera, materia)
 
+def get_info_materia(carrera, materia):
+	return conn.get_info_materia(carrera, materia)
+
 def register(user, passwd):
 	return conn.register(user, passwd)
 

@@ -12,6 +12,8 @@ urls = (
 	'/index',		'pages.index',
 	'/setmateria',		'pages.setmateria',
 	'/corregirnota',	'pages.corregirnota',
+	'/datosmateria',	'pages.datosmateria',
+	'/listamaterias',	'pages.listamaterias',
 	'/personal',		'pages.personal',
 	'/register',		'pages.register',
 )

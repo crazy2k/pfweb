@@ -172,6 +172,56 @@ class register:
 			return web.redirect('register?error=2')
 		web.redirect('login?register_ok=1')
 
+class datosmateria:
+	def GET(self):
+		sid = web.cookies('sid')['sid']
+		personal = server.get_personal(sid)
+		materias = server.get_materias(personal['carrera'], '')
+		materias = materias.items()
+		materias.sort()
 
+		# tienen valor en el POST, las seteamos a None para poder
+		# usar condicionales en el template
+		info = None
+		correlativas = None
+
+		web.render("datosmateria.html")
+
+	def POST(self):
+		sid = web.cookies('sid')['sid']
+
+		i = web.input('cod')
+		personal = server.get_personal(sid)
+		materias = server.get_materias(personal['carrera'], '')
+		materias = materias.items()
+		materias.sort()
+
+		carrera = personal['carrera']
+		info = server.get_info_materia(carrera, i.cod)
+		correlativas = server.get_correlativas(carrera, i.cod)
+		correlativas = correlativas.items()
+		correlativas.sort()
+
+		web.render("datosmateria.html")
+
+
+class listamaterias:
+	def GET(self):
+		# re ineficiente, hacemos un millon de lookups con el server
+
+		sid = web.cookies('sid')['sid']
+		personal = server.get_personal(sid)
+		carrera = personal['carrera']
+		carrera_desc = server.get_carreras()[personal['carrera']]
+		mat_dict = server.get_materias(personal['carrera'], '')
+		mat_list = mat_dict.keys()
+		mat_list.sort()
+
+		materias = []
+		for cod in mat_list:
+			info = server.get_info_materia(carrera, cod)
+			materias.append(info)
+
+		web.render("listamaterias.html")
 
 
