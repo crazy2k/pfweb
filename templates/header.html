@@ -10,5 +10,17 @@
 
 <body>
 
+<div class=container>
+
+<h1>$title</h1>
+
+#try
+	#unless $no_navbar
+		#include "navbar.html"
+	#end unless
+#except
+	#include "navbar.html"
+#end try
+
 <div class=main>
 

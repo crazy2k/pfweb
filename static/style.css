@@ -1,27 +1,55 @@
 
+/*
+ * Layout
+ */
+
+
 body {
 	font-family: sans-serif;
-	color:#000000;
+	color: #000000;
 	background-color: #E9F8E9;
-	font-size: small;
-	margin: 0pt;
 }
 
-div.main {
-	margin: 1% 12% 1% 12%;
-	padding: 0em 20pt 1em 20pt;
+div.container {
+	width: 80%;
+	margin: 10px auto;
 	border: solid 1px #ADA;
 	background: #FFFFFF;
 }
 
 div.navbar {
-	background-color: #F0F0F0;
+	float: left;
+	width: 17%;
+	margin: 0;
+	padding: 1em 0 0 1em;
+	background-color: #FFFFFF;
 	font-size: x-small;
+}
+
+div.main {
+	/* El margen es 3% + margen del navbar */
+	margin-left: 20%;
+	padding: 1em;
+	border-left: solid 1px #ADA;
 }
 
 div.message {
 	color: #F00;
 }
+
+div.footer {
+	clear: both;
+	margin: 0;
+	padding: .5em;
+	color: #333;
+	background-color: #d2e9ff;
+	border-top: 1px solid #ADA;
+}
+
+
+/*
+ * Elementos normales
+ */
 
 h1 {
 	font-size: x-large;
@@ -31,7 +59,7 @@ h1 {
 }
 
 h2 {
-	font-size: large;
+	font-size: medium;
 	color: #2b8fc5;
 	border-bottom: 1px solid #CCC;
 }
@@ -42,7 +70,7 @@ a {
 }
 
 a:hover {
-	text-decoration:underline;
+	text-decoration:none;
 	color: #c00;
 }
 
@@ -50,6 +78,7 @@ tt {
 	color: #000;
 	background:#eee;
 }
+
 
 div.rbar {
 	float: right;
