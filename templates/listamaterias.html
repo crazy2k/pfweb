@@ -24,7 +24,7 @@
 
 	<td class=matlist>
 	#for $c in $mat.dep
-		#if ('!' in $c) or ('c' in $c)
+		#if ('!' in $c) or ('c' in $c) or ('m' in $c)
 			$c
 		#else
 			<a title="$mat_dict[$c]" href="#MAT$c">$c</a>
