@@ -5,6 +5,7 @@ Cosas a agregar
 * Cambio de clave en datos personales
 * Consulta de materias: creditos otorgados, correlatividades, que hace falta
 	para poder cursarlas, que habilitan a cursar, etc.
+* Marcar una materia como cursando
 * Informacion en la pagina principal: creditos actuales/total
 * Listado de materias, separado por obligatorias, optativas y ambas de
 	orientacion o comunes. Marcando en verdecito las aprobadas, y en
@@ -12,6 +13,7 @@ Cosas a agregar
 * Importar del planifi original
 * Exportar a planifi original o a formato propio con fines de backup
 * Boton en registrar para volver al login (tipo cancelar)
+* Link de las materias a sus propiedades, y de las propiedades al programa
 * Loguito y favicon
 * Ayuda/"¿Que es esto?" en el login
 
@@ -25,13 +27,13 @@ Cosas a arreglar
 	(ponerla al costado? hacer mas niveles?)
 * Manejar bien cuando expira una sesion
 * Usar colores para las materias, segun sean optativas o no
-* En el indice, mostrar las listas solo cuando tengan contenido (o sea, si no
-	se esta cursando nada, que aparezca "No estas cursando nada")
+* En el indice, mostrar cant. de materias aprobadas y cant. de creditos
 * Revisar el manejo de errores en la registracion, para que no queden usuarios
 	"zombies"
 * Hacer mas lindas las viñetas
 * Que los usernames sean case-insensitive
 * Mejorar el handling de errores para inputs invalidos
+* En la confirmacion de que se aprobo una materia, mostrar cual fue
 
 
 Cosas a chusmear
