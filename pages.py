@@ -2,12 +2,22 @@
 import server
 import web
 
+
 class login:
 	def GET(self):
 		i = web.input(failed = 0, register_ok = 0)
 		failed = i.failed
 		register_ok = i.register_ok
 		web.render('login.html')
+
+
+class style:
+	def GET(self):
+		# deberia estar en static/ y servirse estaticamente, pero como
+		# es mas dificil de parametrizar dado que solo fuciona en modo
+		# wsgi y no en modo cgi, lo ponemos aca por ahora pues es mas
+		# portable
+		web.render('style.css')
 
 
 class auth:

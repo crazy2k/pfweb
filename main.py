@@ -12,6 +12,7 @@ urls = (
 	root,				'pages.login',
 	root + '/',			'pages.login',
 	root + '/login',		'pages.login',
+	root + '/style',		'pages.style',
 	root + '/auth',			'pages.auth',
 	root + '/logout',		'pages.logout',
 	root + '/index',		'pages.index',
