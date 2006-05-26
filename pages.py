@@ -97,6 +97,28 @@ class setmateria:
 			return web.redirect('setmateria?action_ok=2')
 		web.redirect('setmateria?action_ok=1')
 
+class cursandomateria:
+	def GET(self):
+		sid = web.cookies('sid')['sid']
+
+		i = web.input(action_ok = 0)
+		action_ok = i.action_ok
+		personal = server.get_personal(sid)
+		materias = server.get_materias(personal['carrera'], "")
+		materias = materias.items()
+		materias.sort()
+		aprobadas = server.get_aprobadas(sid)
+		web.render('cursandomateria.html')
+
+	def POST(self):
+		sid = web.cookies('sid')['sid']
+		i = web.input('cod')
+
+		ret = server.set_estado_materia(sid, i.cod, -1)
+		if not ret:
+			return web.redirect('cursandomateria?action_ok=2')
+		web.redirect('cursandomateria?action_ok=1')
+
 
 class corregirnota:
 	# es igual a setmateria, solo que con otro template
