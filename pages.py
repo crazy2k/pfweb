@@ -2,6 +2,21 @@
 import server
 import web
 
+#
+# Funciones auxiliares
+#
+
+def filterstr(s):
+	import string
+	allowed = string.ascii_letters + string.digits
+	new = [c for c in s if c in allowed]
+	new = string.join(new, '')
+	return new
+
+
+#
+# Paginas
+#
 
 class login:
 	def GET(self):
@@ -23,7 +38,8 @@ class style:
 class auth:
 	def POST(self):
 		i = web.input('user', 'passwd')
-		sid = server.auth(i.user, i.passwd)
+		user = filterstr(i.user).lower()
+		sid = server.auth(user, i.passwd)
 		if not sid:
 			return web.redirect("login?failed=1")
 		web.setcookie('sid', sid)
@@ -193,10 +209,7 @@ class chpasswd:
 		if i.new1 != i.new2:
 			return web.redirect('chpasswd?action_ok=0')
 
-		import string
-		allowed = string.ascii_letters + string.digits
-		new = [c for c in i.new1 if c in allowed]
-		new = string.join(new, '')
+		new = filterstr(i.new1)
 
 		server.set_passwd(sid, new)
 		web.redirect('chpasswd?action_ok=1')
@@ -216,11 +229,15 @@ class register:
 				'inid', 'inim', 'iniy',
 				nombre = '', padron = '')
 
-		ret = server.register(i.username, i.passwd)
+		username = filterstr(i.username)
+		username = username.lower()
+		passwd = filterstr(i.passwd)
+
+		ret = server.register(username, passwd)
 		if ret != 0:
 			return web.redirect('register?error=1')
 
-		sid = server.auth(i.username, i.passwd)
+		sid = server.auth(username, passwd)
 		personal = server.get_personal(sid)
 		personal['nombre'] = i.nombre
 		personal['padron'] = i.padron
