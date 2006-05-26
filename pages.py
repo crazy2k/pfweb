@@ -247,6 +247,9 @@ class datosmateria:
 		correlativas = correlativas.items()
 		correlativas.sort()
 
+		url = 'http://www.fi.uba.ar/guiaestudiante/pdf/%s.pdf' % \
+				i.cod.replace(".", "")
+
 		web.render("datosmateria.html")
 
 
