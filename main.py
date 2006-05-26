@@ -22,6 +22,7 @@ urls = (
 	root + '/datosmateria',		'pages.datosmateria',
 	root + '/listamaterias',	'pages.listamaterias',
 	root + '/personal',		'pages.personal',
+	root + '/chpasswd',		'pages.chpasswd',
 	root + '/register',		'pages.register',
 )
 

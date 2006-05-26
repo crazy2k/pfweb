@@ -179,6 +179,30 @@ class personal:
 		web.redirect('personal?action_ok=1')
 
 
+class chpasswd:
+	def GET(self):
+		sid = web.cookies('sid')['sid']
+		i = web.input(action_ok = None)
+		action_ok = i.action_ok
+		web.render("chpasswd.html")
+
+	def POST(self):
+		sid = web.cookies('sid')['sid']
+		i = web.input("new1", "new2")
+
+		if i.new1 != i.new2:
+			return web.redirect('chpasswd?action_ok=0')
+
+		import string
+		allowed = string.ascii_letters + string.digits
+		new = [c for c in i.new1 if c in allowed]
+		new = string.join(new, '')
+
+		server.set_passwd(sid, new)
+		web.redirect('chpasswd?action_ok=1')
+
+
+
 class register:
 	def GET(self):
 		i = web.input(error = 0)

@@ -1,0 +1,43 @@
+
+#set title = 'Cambiar tu clave'
+#include "header.html"
+
+
+#if $action_ok == "1"
+	<div class="message">La clave fue cambiada sin problemas.</div><p>
+#else if $action_ok == "0"
+	<div class="message">Las dos claves ingresadas no concuerdan, por
+	favor intentá nuevamente.</div><p>
+#end if
+
+<h2>Cambiar tu clave</h2>
+
+<form method=POST action="chpasswd">
+
+<b>1.</b> Escribi tu clave nueva:
+		<input type="password" size=12 name="new1"><br>
+<b>2.</b> Escribila una vez mas:
+		<input type="password" size=12 name="new2"><br>
+<p>
+<b>3.</b> Para terminar, apretá <input type=submit value="Cambiar mi clave">
+</form><p>
+
+
+<h2>Consejos para elegir tu clave</h2>
+
+La clave de este sistema no es muy importante, asi que te recomendamos elegir
+una distinta de las que uses para cosas como tu cuenta de email o el cajero
+automático.<p>
+
+Tiene que ser cualquier cantidad de letras y números, pero que no contengan
+acentos ni eñes. Te recomendamos que tenga entre 6 y 10 caracteres, asi no es
+trivial de adivinar ni tampoco demasiado larga como para que te la olvides.<p>
+
+Una buena estrategia si queres una clave segura es pensar en una frase facil y
+recordable, y escribirla toda junta, sin espacios. Por ejemplo, si tenes
+hambre frecuentemente podes usar "tengohambre"; o si sos un ñoño de Análisis
+podes poner "gaussidolo".<p>
+
+
+#include "footer.html"
+
