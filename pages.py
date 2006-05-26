@@ -215,6 +215,15 @@ class register:
 class datosmateria:
 	def GET(self):
 		sid = web.cookies('sid')['sid']
+
+		# si nos llaman con un codigo, entonces hacemos de cuenta que
+		# es un POST (esto se usa para linkear de la lista de materias
+		# a los datos de las materias
+		i = web.input(cod = None)
+		if i.cod:
+			self.POST()
+			return
+
 		personal = server.get_personal(sid)
 		materias = server.get_materias(personal['carrera'], '')
 		materias = materias.items()

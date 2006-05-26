@@ -4,6 +4,10 @@
 
 <h2>Lista de materias para la carrera $personal.carrera</h2>
 
+Si dejas el mouse arriba de los códigos que estan en azul, te va a aparecer el
+nombre de la materia correspondiente; y si les haces click vas a la página con
+información detallada de la misma.<p>
+
 <table class=matlist>
 
 <tr><th>Cod</th><th>Nombre</th><th>Cred</th><th>Correlativas</th></tr>
@@ -27,7 +31,7 @@
 		#if ('!' in $c) or ('c' in $c) or ('m' in $c)
 			$c
 		#else
-			<a title="$mat_dict[$c]" href="#MAT$c">$c</a>
+			<a title="$mat_dict[$c]" href="datosmateria?cod=$c">$c</a>
 		#endif
 	#end for
 	</td>
