@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """web.py: makes web apps (http://webpy.org)"""
-__version__ = "0.137"
-__revision__ = "$Rev: 53 $"
-__license__ = "Public domain"
+__version__ = "0.1381"
+__revision__ = "$Rev: 72 $"
+__license__ = "public domain"
 __author__ = "Aaron Swartz <me@aaronsw.com>"
 __contributors__ = "see http://webpy.org/changes"
 
@@ -25,12 +25,13 @@ from __future__ import generators
 #   - merge curval query with the insert
 #   - figure out how to handle squid, etc. for web.ctx.ip
 
-import os, os.path, sys, time, types, traceback
+import os, os.path, sys, time, types, traceback, threading
 import cgi, re, urllib, urlparse, Cookie, pprint
 from threading import currentThread
 from tokenize import tokenprog
 iters = (list, tuple)
-if hasattr(__builtins__, 'set') or __builtins__.has_key('set'):
+if hasattr(__builtins__, 'set') or (
+  hasattr(__builtins__, 'has_key') and __builtins__.has_key('set')):
     iters += (set,)
 try: 
     from sets import Set
@@ -63,16 +64,9 @@ if not hasattr(traceback, 'format_exc'):
         return strbuf.getvalue()
     traceback.format_exc = format_exc
 
-## general utils
-class WrongDirection(Exception):
-    """raised for unsupported direction
-
-    Currently supported: r, l
-    """
-    pass
+## General Utilities
 
 def _strips(direction, text, remove):
-    """strips 'remove' from 'text' at 'direction' end"""
     if direction == 'l': 
         if text.startswith(remove): 
             return text[len(remove):]
@@ -80,7 +74,7 @@ def _strips(direction, text, remove):
         if text.endswith(remove):   
             return text[:-len(remove)]
     else: 
-        raise WrongDirection, "Needs to be r or l."
+        raise ValueError, "Direction needs to be r or l."
     return text
 
 def rstrips(text, remove):
@@ -133,15 +127,49 @@ def storify(mapping, *requireds, **defaults):
 
     For example, `storify({'a':1, 'c':3}, b=2, c=0)` will return the equivalent of
     `storage({'a':1, 'b':2, 'c':3})`.
+    
+    If a `storify` value is a list (e.g. multiple values in a form submission), 
+    `storify` returns the last element of the list, unless the key appears in 
+    `defaults` as a list. Thus:
+    
+        >>> storify({'a':[1, 2]}).a
+        2
+        >>> storify({'a':[1, 2]}, a=[]).a
+        [1, 2]
+        >>> storify({'a':1}, a=[]).a
+        [1]
+        >>> storify({}, a=[]).a
+        []
+    
+    Similarly, if the value has a `value` attribute, `storify will return _its_
+    value, unless the key appears in `defaults` as a dictionary.
+    
+        >>> storify({'a':storage(value=1)}).a
+        1
+        >>> storify({'a':storage(value=1)}, a={}).a
+        <Storage {'value': 1}>
+        >>> storify({}, a={}).a
+        {}
+    
     """
+    def getvalue(x):
+        if hasattr(x, 'value'):
+            return x.value
+        else:
+            return x
+    
     stor = Storage()
-
     for key in requireds + tuple(mapping.keys()):
         value = mapping[key]
-        if isinstance(value, list): 
-            value = value[-1]
-        if hasattr(value, 'value'): 
-            value = value.value
+        if isinstance(value, list):
+            if isinstance(defaults.get(key), list):
+                value = [getvalue(x) for x in value]
+            else:
+                value = value[-1]
+        if not isinstance(defaults.get(key), dict):
+            value = getvalue(value)
+        if isinstance(defaults.get(key), list) and not isinstance(value, list):
+            value = [value]
         setattr(stor, key, value)
 
     for (key, value) in defaults.iteritems():
@@ -156,7 +184,7 @@ def storify(mapping, *requireds, **defaults):
 
 class Memoize:
     """
-    "Memoizes" a function, caching its return values for each input.
+    'Memoizes' a function, caching its return values for each input.
     """
     def __init__(self, func): 
         self.func = func
@@ -214,7 +242,7 @@ class IterBetter:
     def __getitem__(self, i):
         #todo: slices
         if i > self.c: 
-            raise KeyError, "already passed "+str(i)
+            raise IndexError, "already passed "+str(i)
         try:
             while i < self.c: 
                 self.i.next()
@@ -223,7 +251,7 @@ class IterBetter:
             self.c += 1
             return self.i.next()
         except StopIteration: 
-            raise KeyError, repr(i)
+            raise IndexError, str(i)
 iterbetter = IterBetter
 
 def dictreverse(mapping):
@@ -276,6 +304,59 @@ def listget(lst, ind, default=None):
     if len(lst)-1 < ind: 
         return default
     return lst[ind]
+
+def intget(integer, default=None):
+    """Returns `integer` as an int or `default` if it can't."""
+    try:
+        return int(integer)
+    except (TypeError, ValueError):
+        return default
+
+def datestr(then, now=None):
+    """Converts a (UTC) datetime object to a nice string representation."""
+    def agohence(n, what, divisor=None):
+        if divisor: n = n // divisor
+
+        out = str(abs(n)) + ' ' + what       # '2 day'
+        if abs(n) != 1: out += 's'           # '2 days'
+        out += ' '                           # '2 days '
+        if n < 0:
+            out += 'from now'
+        else:
+            out += 'ago'
+        return out                           # '2 days ago'
+
+    oneday = 24 * 60 * 60
+
+    if not now: now = datetime.datetime.utcnow()
+    delta = now - then
+    deltaseconds = int(delta.days * oneday + delta.seconds + delta.microseconds * 1e-06)
+    deltadays = abs(deltaseconds) // oneday
+    if deltaseconds < 0: deltadays *= -1 # fix for oddity of floor
+
+    if deltadays:
+        if abs(deltadays) < 4:
+            return agohence(deltadays, 'day')
+
+        out = then.strftime('%B %e') # e.g. 'June 13'
+        if then.year != now.year or deltadays < 0:
+            out += ', %s' % then.year
+        return out
+
+    if int(deltaseconds):
+        if abs(deltaseconds) > (60 * 60):
+            return agohence(deltaseconds, 'hour', 60 * 60)
+        elif abs(deltaseconds) > 60:
+            return agohence(deltaseconds, 'minute', 60)
+        else:
+            return agohence(deltaseconds, 'second')
+
+    deltamicroseconds = delta.microseconds
+    if delta.days: deltamicroseconds = int(delta.microseconds - 1e6) # datetime oddity
+    if abs(deltamicroseconds) > 1000:
+        return agohence(deltamicroseconds, 'millisecond', 1000)
+
+    return agohence(deltamicroseconds, 'microsecond')
 
 def upvars(level=2):
     """Guido van Rossum doesn't want you to use this function."""
@@ -380,15 +461,18 @@ class ThreadedDict:
         return getattr(self.__d[currentThread()], attr)
     def __getitem__(self, item): 
         return self.__d[currentThread()][item]
-    def __setattr__(self, attr, value): 
-        return setattr(self.__d[currentThread()], attr, value)
+    def __setattr__(self, attr, value):
+        if attr == '__doc__':
+            self.__dict__[attr] = value
+        else:
+            return setattr(self.__d[currentThread()], attr, value)
     def __setitem__(self, item, value): 
         self.__d[currentThread()][item] = value
     def __hash__(self): 
         return hash(self.__d[currentThread()])
 threadeddict = ThreadedDict
 
-## ip utils
+## IP Utilities
 
 def validipaddr(address):
     """returns True if `address` is a valid IPv4 address"""
@@ -410,7 +494,7 @@ def validipport(port):
     return True
 
 def validip(ip, defaultaddr="0.0.0.0", defaultport=8080):
-    """returns (ip_address, port) from string `ip_addr_port`"""
+    """returns `(ip_address, port)` from string `ip_addr_port`"""
     addr = defaultaddr
     port = defaultport
     
@@ -432,8 +516,15 @@ def validip(ip, defaultaddr="0.0.0.0", defaultport=8080):
     else:
         raise ValueError, ':'.join(ip) + ' is not a valid IP address/port'
     return (addr, port)
-    
-## url utils
+
+def validaddr(string_):
+    """returns either (ip_address, port) or "/path/to/socket" from string_"""
+    if '/' in string_:
+        return string_
+    else:
+        return validip(string_)
+
+## URL Utilities
 
 def prefixurl(base=''):
     """
@@ -447,9 +538,9 @@ def prefixurl(base=''):
         base = './'
     return base
 
-urlquote = urllib.quote
+def urlquote(x): return urllib.quote(websafe(x).encode('utf-8'))
 
-## formatting
+## Formatting
 
 try:
     from markdown import markdown # http://webpy.org/markdown.py
@@ -472,10 +563,11 @@ def safemarkdown(text):
         text = markdown(text)
         return text
 
-## db api
-class ItplError(ValueError):
+## Databases
+
+class _ItplError(ValueError):
     """String Interpolation Error
-    from http://lfw.org/python/Itpl.py 
+    from <http://lfw.org/python/Itpl.py>
     (cf. below for license)
     """
     def __init__(self, text, pos):
@@ -485,18 +577,19 @@ class ItplError(ValueError):
     def __str__(self):
         return "unfinished expression in %s at char %d" % (
             repr(self.text), self.pos)
+
 def _interpolate(format):
     """
     Takes a format string and returns a list of 2-tuples of the form
     (boolean, string) where boolean says whether string should be evaled
     or not.
     
-    from http://lfw.org/python/Itpl.py (public domain, Ka-Ping Yee)
+    from <http://lfw.org/python/Itpl.py> (public domain, Ka-Ping Yee)
     """
     def matchorfail(text, pos):
         match = tokenprog.match(text, pos)
         if match is None:
-            raise ItplError(text, pos)
+            raise _ItplError(text, pos)
         return match, match.end()
     
     namechars = "abcdefghijklmnopqrstuvwxyz" \
@@ -667,9 +760,27 @@ def connect(dbn, **keywords):
     if globals().get('db_printing'):
         def db_execute(cur, sql_query, d=None):
             """executes an sql query"""
+            
+            def sqlquote(obj):
+                """converts `obj` to its proper SQL version"""
+                
+                # because `1 == True and hash(1) == hash(True)`
+                # we have to do this the hard way...
+                
+                if obj is None:
+                    return 'NULL'
+                elif obj is True:
+                    return "'t'"
+                elif obj is False:
+                    return "'f'"
+                elif isinstance(obj, datetime.datetime):
+                    return repr(obj.isoformat())
+                else:
+                    return repr(obj)
+            
             ctx.dbq_count += 1
             try: 
-                outq = sql_query % tuple(d)
+                outq = sql_query % tuple(map(sqlquote, d))
             except TypeError:
                 outq = sql_query
             print >> debug, str(ctx.dbq_count)+':', outq
@@ -740,6 +851,24 @@ def sqllist(lst):
         return lst
     else: return ', '.join(lst)
 
+def sqlwhere(dictionary):
+    """
+    Converts a `dictionary` to an SQL WHERE clause in
+    `reparam` format. Thus,
+    
+        {'cust_id': 2, 'order_id':3}
+    
+    would result in the equivalent of:
+    
+        'cust_id = 2 AND order_id = 3'
+    
+    but properly quoted.
+    """
+    
+    return ' AND '.join([
+      '%s = %s' % (k, aparam()) for k in dictionary.keys()
+    ]), dictionary.values()
+
 def select(tables, vars=None, what='*', where=None, order=None, group=None, 
            limit=None, offset=None):
     """
@@ -750,9 +879,11 @@ def select(tables, vars=None, what='*', where=None, order=None, group=None,
     if vars is None: 
         vars = {}
     values = []
-    qout = "SELECT " + what + " FROM "+sqllist(tables)
-
+    qout = ""
+    
     for (sql, val) in (
+      ('SELECT', what),
+      ('FROM', sqllist(tables)),
       ('WHERE', where), 
       ('GROUP BY', group), 
       ('ORDER BY', order), 
@@ -867,7 +998,7 @@ def delete(table, where, using=None, vars=None):
         ctx.db.commit()
     return db_cursor.rowcount
 
-## request handlers
+## Request Handlers
 
 def handle(mapping, fvars=None):
     """
@@ -957,7 +1088,40 @@ def autodelegate(prefix=''):
             return notfound()
     return internal
 
-## http defaults
+def background(func):
+    """A function decorator to run a long-running function as a background thread."""
+    def internal(*a, **kw):
+        data() # cache it
+        ctx = _context[currentThread()]
+        _context[currentThread()] = storage(ctx.copy())
+
+        def newfunc():
+            _context[currentThread()] = ctx
+            func(*a, **kw)
+
+        t = threading.Thread(target=newfunc)
+        background.threaddb[id(t)] = t
+        t.start()
+        ctx.headers = []
+        return seeother(changequery(_t=id(t)))
+    return internal
+background.threaddb = {}
+
+def backgrounder(func):
+    def internal(*a, **kw):
+        i = input(_method='get')
+        if '_t' in i:
+            try:
+                t = background.threaddb[int(i._t)]
+            except KeyError:
+                return notfound()
+            _context[currentThread()] = _context[t]
+            return
+        else:
+            return func(*a, **kw)
+    return internal
+
+## HTTP Functions
 
 def httpdate(date_obj):
     """Formats a datetime object for use in HTTP headers."""
@@ -1018,6 +1182,7 @@ def redirect(url, status='301 Moved Permanently'):
     """
     newloc = urlparse.urljoin(ctx.home + ctx.path, url)
     ctx.status = status
+    ctx.output = ''    
     header('Content-Type', 'text/html')
     header('Location', newloc)
     # seems to add a three-second delay for some reason:
@@ -1055,7 +1220,9 @@ def nomethod(cls):
            ', '.join([method for method in \
                      ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'] \
                         if hasattr(cls, method)]))
-    return output('method not allowed')
+    
+    # commented out for the same reason redirect is
+    # return output('method not allowed')
 
 def gone():
     """Returns a `410 Gone` error."""
@@ -1452,7 +1619,7 @@ installed Cheetah. See above.)</p>
     ctx.output = out
 
 
-## rendering
+## Rendering
 
 r_include = re_compile(r'(?!\\)#include \"(.*?)\"($|#)', re.M)
 def __compiletemplate(template, base=None, isString=False):
@@ -1489,9 +1656,16 @@ def htmlquote(text):
     return text
 
 def websafe(val):
+    """
+    Converts `val` so that it's safe for use in HTML.
+
+    HTML metacharacters are encoded,
+    None becomes the empty string, and
+    unicode is converted to UTF-8.
+    """
     if val is None: return ''
-    if isinstance(val, unicode): val = val.encode('utf8')
-    return htmlquote(str(val))
+    if not isinstance(val, unicode): val = str(val)
+    return htmlquote(val)
 
 if _hasTemplating:
     class WebSafe(Filter):
@@ -1536,7 +1710,7 @@ def render(template, terms=None, asTemplate=False, base=None,
         terms = (terms,)
     
     if not isString and template.endswith('.html'): 
-        header('Content-Type','text/html; charset=utf-8')
+        header('Content-Type','text/html; charset=utf-8', unique=True)
         
     compiled_tmpl = _compiletemplate(template, base=base, isString=isString)
     compiled_tmpl = compiled_tmpl(searchList=terms, filter=WebSafe)
@@ -1545,7 +1719,7 @@ def render(template, terms=None, asTemplate=False, base=None,
     else: 
         return output(str(compiled_tmpl))
 
-## input forms
+## Input Forms
 
 def input(*requireds, **defaults):
     """
@@ -1553,27 +1727,56 @@ def input(*requireds, **defaults):
     See `storify` for how `requireds` and `defaults` work.
     """
     from cStringIO import StringIO
+    def dictify(fs): return dict([(k, fs[k]) for k in fs.keys()])
     
-    if not '_inputfs' in ctx:
-        e = ctx.env.copy()
+    _method = defaults.pop('_method', 'both')
+    
+    e = ctx.env.copy()
+    out = {}
+    if _method.lower() in ['both', 'post']:
         a = {}
         if e['REQUEST_METHOD'] == 'POST':
             a = cgi.FieldStorage(fp = StringIO(data()), environ=e, 
               keep_blank_values=1)
-            a = storify(a)
+            a = dictify(a)
+        out = dictadd(out, a)
+
+    if _method.lower() in ['both', 'get']:
         e['REQUEST_METHOD'] = 'GET'
-        b = storify(cgi.FieldStorage(environ=e, keep_blank_values=1))
-        
-        ctx._inputfs = dictadd(a, b)
-    return storify(ctx._inputfs, *requireds, **defaults)
+        a = dictify(cgi.FieldStorage(environ=e, keep_blank_values=1))
+        out = dictadd(out, a)
+    
+    try:
+        return storify(out, *requireds, **defaults)
+    except KeyError:
+        badrequest()
+        raise StopIteration
 
 def data():
+    """Returns the data sent with the request."""
     if 'data' not in ctx:
-        cl = int(ctx.env['CONTENT_LENGTH'])
+        cl = intget(ctx.env.get('CONTENT_LENGTH'), 0)
         ctx.data = ctx.env['wsgi.input'].read(cl)
     return ctx.data
 
-## cookies
+def changequery(**kw):
+    """
+    Imagine you're at `/foo?a=1&b=2`. Then `changequery(a=3)` will return
+    `/foo?a=3&b=2` -- the same URL but with the arguments you requested
+    changed.
+    """
+    query = input(_method='get')
+    for k, v in kw.iteritems():
+        if v is None:
+            query.pop(k, None)
+        else:
+            query[k] = v
+    out = ctx.path
+    if query:
+        out += '?' + urllib.urlencode(query)
+    return out
+
+## Cookies
 
 def setcookie(name, value, expires="", domain=None):
     """Sets a cookie."""
@@ -1596,20 +1799,46 @@ def cookies(*requireds, **defaults):
     """
     cookie = Cookie.SimpleCookie()
     cookie.load(ctx.env.get('HTTP_COOKIE', ''))
-    return storify(cookie, *requireds, **defaults)
+    try:
+        return storify(cookie, *requireds, **defaults)
+    except KeyError:
+        badrequest()
+        raise StopIteration
 
 ## WSGI Sugar
 
-def header(hdr, value):
-    """Adds the header `hdr: value` with the response."""
+def header(hdr, value, unique=False):
+    """
+    Adds the header `hdr: value` with the response.
+    
+    If `unique` is True and a header with that name already exists,
+    it doesn't add a new one. If `unique` is None and a header with
+    that name already exists, it replaces it with this one.
+    """
+    if unique is True:
+        for h, v in ctx.headers:
+            if h == hdr: return
+    elif unique is None:
+        ctx.headers = [h for h in ctx.headers if h[0] != hdr]
+    
     ctx.headers.append((hdr, value))
+
 def output(string_):
     """Appends `string_` to the response."""
-    ctx.output += str(string_)
+    if isinstance(string_, unicode): string_ = string_.encode('utf8')
+    if ctx.get('flush'):
+        ctx._write(string_)
+    else:
+        ctx.output += str(string_)
+
+def flush():
+    ctx.flush = True
+    return flush
 
 def write(cgi_response):
-    """Converts a standard CGI-style string response into `header` and 
-       `output` calls.
+    """
+    Converts a standard CGI-style string response into `header` and 
+    `output` calls.
     """
     cgi_response = str(cgi_response)
     cgi_response.replace('\r\n', '\n')
@@ -1663,26 +1892,62 @@ def wsgifunc(func, *middleware):
         relrcheck()
         try:
             result = func()
-        except StopIteration: 
+        except StopIteration:
             result = None
+        
         is_generator = result and hasattr(result, 'next')
         if is_generator:
-            # we need to give wsgi back the headers first,
-            # so we need to do at iteration
-            try: 
+            # wsgi requires the headers first
+            # so we need to do an iteration
+            # and save the result for later
+            try:
                 firstchunk = result.next()
-            except StopIteration: 
+            except StopIteration:
                 firstchunk = ''
+
         status, headers, output = ctx.status, ctx.headers, ctx.output
-        _unload()
-        start_resp(status, headers)
-        if is_generator: 
-            return itertools.chain([firstchunk], result)
-        elif isinstance(output, str): 
-            return [output] #@@ other stringlikes?
-        elif hasattr(output, 'next'): 
-            return output
-        else: 
+        ctx._write = start_resp(status, headers)
+
+        # and now, the fun:
+        
+        def cleanup():
+            # we insert this little generator
+            # at the end of our itertools.chain
+            # so that it unloads the request
+            # when everything else is done
+            
+            yield '' # force it to be a generator
+            _unload()
+
+        # result is the output of calling the webpy function
+        #   it could be a generator...
+        
+        if is_generator:
+            if firstchunk is flush:
+                # oh, it's just our special flush mode
+                # ctx._write is set up, so just continue execution
+                try:
+                    result.next()
+                except StopIteration:
+                    pass
+
+                _unload()
+                return []
+            else:
+                return itertools.chain([firstchunk], result, cleanup())
+        
+        #   ... but it's usually just None
+        # 
+        # output is the stuff in ctx.output
+        #   it's usually a string...
+        if isinstance(output, str): #@@ other stringlikes?
+            _unload()
+            return [output] 
+        #   it could be a generator...
+        elif hasattr(output, 'next'):
+            return itertools.chain(output, cleanup())
+        else:
+            _unload()
             raise Exception, "Invalid web.ctx.output"
     
     for mw_func in middleware: 
@@ -1738,10 +2003,10 @@ def runsimple(func, server_address=("0.0.0.0", 8080)):
     Runs a simple HTTP server hosting WSGI app `func`. The directory `static/` 
     is hosted statically.
 
-    Based on [WsgiServer] from [Colin Stewart].
+    Based on [WsgiServer][ws] from [Colin Stewart][cs].
     
-      [WsgiServer]: http://www.owlfish.com/software/wsgiutils/documentation/wsgi-server-api.html
-      [Colin Stewart]: http://www.owlfish.com/
+  [ws]: http://www.owlfish.com/software/wsgiutils/documentation/wsgi-server-api.html
+  [cs]: http://www.owlfish.com/
     """
     # Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
     # Modified somewhat for simplicity
@@ -1878,7 +2143,7 @@ def runfcgi(func):
         args = sys.argv[:]
         if 'fastcgi' in args: args.remove('fastcgi')
         elif 'fcgi' in args: args.remove('fcgi')
-        hostport = validip(args[1])
+        hostport = validaddr(args[1])
     elif len(sys.argv) > 1: 
         hostport = ('localhost', 8000)
     else:
@@ -1892,12 +2157,12 @@ def runscgi(func):
     if len(sys.argv) > 2: # progname, scgi
         args = sys.argv[:]
         args.remove('scgi')
-        hostport = validip(args[1])
+        hostport = validaddr(args[1])
     else: 
         hostport = ('localhost', 4000)
     return my_server(func, bindAddress=hostport).run()
 
-## debug
+## Debugging
 
 def debug(*args):
     """
@@ -1963,7 +2228,7 @@ def profiler(app):
         return out + ['<pre>' + result + '</pre>'] #@@encode
     return profile_internal
 
-## setting up the context
+## Context
 
 class _outputter:
     """Wraps `sys.stdout` so that print statements go into the response."""
@@ -1983,49 +2248,67 @@ ctx = context = threadeddict(_context)
 ctx.__doc__ = """
 A `storage` object containing various information about the request:
   
-   `environ` (aka `env`)
-     : A dictionary containing the standard WSGI environment variables.
+`environ` (aka `env`)
+   : A dictionary containing the standard WSGI environment variables.
 
-   `host`
-     : The domain (`Host` header) requested by the user.
-  
-   `home`
-     : The base path for the application.
-  
-   `ip`
-     : The IP address of the requester.
-  
-   `method`
-     : The HTTP method used.
-  
-   `path`
-     : The path request.
-  
-   `fullpath`
-     : The full path requested, including query arguments.
-  
-   ### Response Data
-  
-   `status` (default: "200 OK")
-     : The status code to be used in the response.
-  
-   `headers`
-     : A list of 2-tuples to be used in the response.
-  
-   `output`
-     : A string to be used as the response.
+`host`
+   : The domain (`Host` header) requested by the user.
+
+`home`
+   : The base path for the application.
+
+`ip`
+   : The IP address of the requester.
+
+`method`
+   : The HTTP method used.
+
+`path`
+   : The path request.
+
+`fullpath`
+   : The full path requested, including query arguments.
+
+### Response Data
+
+`status` (default: "200 OK")
+   : The status code to be used in the response.
+
+`headers`
+   : A list of 2-tuples to be used in the response.
+
+`output`
+   : A string to be used as the response.
 """
 
 if not '_oldstdout' in globals(): 
     _oldstdout = sys.stdout
     sys.stdout = _outputter()
 
-def _load(env):
+loadhooks = {}
+
+def load():
+    """
+    Loads a new context for the thread.
+    
+    You can ask for a function to be run at loadtime by 
+    adding it to the dictionary `loadhooks`.
+    """
     _context[currentThread()] = Storage()
+    ctx.status = '200 OK'
+    ctx.headers = []
+    if 'db_parameters' in globals():
+        connect(**db_parameters)
+    
+    for x in loadhooks.values(): x()
+
+def _load(env):
+    load()
+    ctx.output = ''
     ctx.environ = ctx.env = env
     ctx.host = env.get('HTTP_HOST')
     ctx.home = 'http://' + env.get('HTTP_HOST', '[unknown]') + \
-                env.get('SCRIPT_NAME', '')
+                os.environ.get('REAL_SCRIPT_NAME', env.get('SCRIPT_NAME', ''))
     ctx.ip = env.get('REMOTE_ADDR')
     ctx.method = env.get('REQUEST_METHOD')
     ctx.path = env.get('PATH_INFO')
@@ -2037,17 +2320,27 @@ def _load(env):
     ctx.fullpath = ctx.path
     if env.get('QUERY_STRING'):
         ctx.fullpath += '?' + env.get('QUERY_STRING', '')
-    ctx.status = '200 OK'
-    ctx.headers = []
-    ctx.output = ''
-    if 'db_parameters' in globals():
-        connect(**db_parameters)
 
-def _unload(): 
+unloadhooks = {}
+
+def unload():
+    """
+    Unloads the context for the thread.
+    
+    You can ask for a function to be run at loadtime by
+    adding it ot the dictionary `unloadhooks`.
+    """
+    for x in unloadhooks.values(): x()
     # ensures db cursors and such are GCed promptly
     del _context[currentThread()]
 
+def _unload():
+    unload()
+
 if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+    
     urls = ('/web.py', 'source')
     class source:
         def GET(self):
