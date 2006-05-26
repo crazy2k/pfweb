@@ -68,6 +68,8 @@ class index:
 			info = server.get_info_materia(personal['carrera'], key)
 			creditos += info['creditos']
 
+		cantaprobadas = len(aprobadas)
+
 		web.render('index.html')
 
 
