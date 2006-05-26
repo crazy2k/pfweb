@@ -1664,8 +1664,10 @@ def websafe(val):
     unicode is converted to UTF-8.
     """
     if val is None: return ''
-    if not isinstance(val, unicode): val = str(val)
-    return htmlquote(val)
+    #if not isinstance(val, unicode): val = str(val)
+    #return htmlquote(val)
+    if isinstance(val, unicode): val = val.encode('utf8')
+    return htmlquote(str(val))
 
 if _hasTemplating:
     class WebSafe(Filter):
