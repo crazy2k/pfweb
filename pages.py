@@ -59,10 +59,14 @@ class index:
 		for key in apro_dict:
 			aprobadas.append([key] + apro_dict[key])
 			promedio += apro_dict[key][0]
-		del apro_dict
 		if len(aprobadas):
 			promedio = promedio / len(aprobadas)
 		promedio = "%.2f" % promedio
+
+		creditos = 0
+		for key in apro_dict:
+			info = server.get_info_materia(personal['carrera'], key)
+			creditos += info['creditos']
 
 		web.render('index.html')
 
