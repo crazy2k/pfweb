@@ -15,11 +15,12 @@ instrucciones.<p>
 
 <b>1.</b> Primero, elegi la materia:<br>
 <select name="cod">
-#for $mat in $materias:
-	#if not $aprobadas.has_key($mat[0])
-		#continue
-	#end if
-	<option value="$mat[0]">$mat[0]: $mat[1] ($aprobadas[$mat[0]][0])
+#for $mat in $aplist:
+	<option value="$mat[0]">$mat[0]: $mat[1][1] ($mat[1][0])
+	</option>
+#end for
+#for $mat in $curlist:
+	<option value="$mat[0]">$mat[0]: $mat[1] (Cursando)
 	</option>
 #end for
 </select><p>

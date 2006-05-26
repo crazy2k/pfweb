@@ -130,10 +130,12 @@ class corregirnota:
 		action_ok = i.action_ok
 
 		personal = server.get_personal(sid)
-		materias = server.get_materias(personal['carrera'], "")
-		materias = materias.items()
-		materias.sort()
 		aprobadas = server.get_aprobadas(sid)
+		aplist = aprobadas.items()
+		aplist.sort()
+		cursando = server.get_cursando(sid)
+		curlist = cursando.items()
+		curlist.sort()
 
 		web.render('corregirnota.html')
 
