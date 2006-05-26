@@ -8,11 +8,26 @@
 
 Créditos: $info.creditos<br>
 
+#if $inmediatas
+	Correlativas inmediatas:
+	<ul>
+	#for $cor in $inmediatas
+		#if $personal.aprobadas.has_key($cor[0])
+			<li class=aprobada>$cor[0]: $cor[1]</li>
+		#else if $cor[0] in $personal.cursando:
+			<li class=cursando>$cor[0]: $cor[1]</li>
+		#else
+			<li>$cor[0]: $cor[1]</li>
+		#end if
+	#end for
+	</ul>
+#end if
+
 #if $correlativas
-	Correlativas:
+	Correlativas completas:
 	<ul>
 	#for $cor in $correlativas
-		#if $cor[0] in $personal.aprobadas.keys():
+		#if $personal.aprobadas.has_key($cor[0]):
 			<li class=aprobada>$cor[0]: $cor[1]</li>
 		#else if $cor[0] in $personal.cursando:
 			<li class=cursando>$cor[0]: $cor[1]</li>

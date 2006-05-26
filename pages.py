@@ -231,11 +231,16 @@ class datosmateria:
 		i = web.input('cod')
 		personal = server.get_personal(sid)
 		materias = server.get_materias(personal['carrera'], '')
-		materias = materias.items()
-		materias.sort()
 
 		carrera = personal['carrera']
 		info = server.get_info_materia(carrera, i.cod)
+		info['dep'].sort()
+		inmediatas = [(mat, materias[mat]) for mat in info['dep']]
+		inmediatas.sort()
+
+		materias = materias.items()
+		materias.sort()
+
 		correlativas = server.get_correlativas(carrera, i.cod)
 		correlativas = correlativas.items()
 		correlativas.sort()
