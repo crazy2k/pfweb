@@ -4,18 +4,24 @@ import web
 
 import pages
 
+# Raiz del sitio, necesario para poner algunos links.
+# No tocar NADA salvo esto.
+root = '/pf'
+
 urls = (
-	'/',			'pages.login',
-	'/login',		'pages.login',
-	'/auth',		'pages.auth',
-	'/logout',		'pages.logout',
-	'/index',		'pages.index',
-	'/setmateria',		'pages.setmateria',
-	'/corregirnota',	'pages.corregirnota',
-	'/datosmateria',	'pages.datosmateria',
-	'/listamaterias',	'pages.listamaterias',
-	'/personal',		'pages.personal',
-	'/register',		'pages.register',
+	root,				'pages.login',
+	root + '/',			'pages.login',
+	root + '/login',		'pages.login',
+	root + '/auth',			'pages.auth',
+	root + '/logout',		'pages.logout',
+	root + '/index',		'pages.index',
+	root + '/setmateria',		'pages.setmateria',
+	root + '/cursandomateria',	'pages.cursandomateria',
+	root + '/corregirnota',		'pages.corregirnota',
+	root + '/datosmateria',		'pages.datosmateria',
+	root + '/listamaterias',	'pages.listamaterias',
+	root + '/personal',		'pages.personal',
+	root + '/register',		'pages.register',
 )
 
 web.internalerror = web.debugerror
