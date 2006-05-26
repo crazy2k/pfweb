@@ -19,6 +19,8 @@
 	<td>Padrón:</td>
 	<td><input type=text name=padron size=8 value="$personal.padron"></td>
 </tr><tr>
+
+#if len($areas) > 1
 	<td>Orientación:</td>
 	<td><select name=area>
 	#for $area in $areas
@@ -31,6 +33,8 @@
 		#end if
 	#end for
 	</select></td>
+#end if
+
 </tr><tr>
 	<td colspan=2 align=center>
 	<input type=submit value="Actualizar datos">

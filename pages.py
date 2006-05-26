@@ -187,7 +187,8 @@ class personal:
 		personal = server.get_personal(sid)
 		personal['nombre'] = i.nombre
 		personal['padron'] = i.padron
-		personal['area'] = i.area
+		if i.area:
+			personal['area'] = i.area
 		ret = server.set_personal(sid, personal)
 
 		if not ret:
