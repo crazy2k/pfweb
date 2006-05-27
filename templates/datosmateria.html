@@ -7,7 +7,13 @@
 <h2>$info.codigo: $info.desc</h2>
 
 Créditos: $info.creditos.<br>
+#if $personal.aprobadas.has_key($codigo)
+	Aprobaste esta materia con $personal.aprobadas[$codigo].<br>
+#else if $codigo in $personal.cursando
+	Estas cursando esta materia.<br>
+#end if
 
+<p>
 
 #def showcode($code)
 	#if '!' in $code
