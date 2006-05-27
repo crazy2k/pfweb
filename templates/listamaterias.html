@@ -28,11 +28,15 @@ información detallada de la misma.<p>
 
 	<td class=matlist>
 	#for $c in $mat.dep
-		#if ('!' in $c) or ('c' in $c) or ('m' in $c)
-			$c
+		#if '!' in $c
+			No $c[1:]
+		#else if 'c' in $c
+			$c[:-1] créditos
+		#else if 'm' in $c
+			$c[:-1] materias
 		#else
 			<a title="$mat_dict[$c]" href="datosmateria?cod=$c">$c</a>
-		#endif
+		#end if
 	#end for
 	</td>
 
