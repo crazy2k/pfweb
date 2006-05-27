@@ -104,12 +104,13 @@ class setmateria:
 
 		# para cuando confirmamos que anduvo todo bien, se usa en el
 		# template nomas
-		i = web.input(action_ok = 0)
+		i = web.input(action_ok = 0, cod = None)
 		action_ok = i.action_ok
+		cod = i.cod
 
 		personal = server.get_personal(sid)
-		materias = server.get_materias(personal['carrera'], "")
-		materias = materias.items()
+		matdict = server.get_materias(personal['carrera'], "")
+		materias = matdict.items()
 		materias.sort()
 		aprobadas = server.get_aprobadas(sid)
 
@@ -126,19 +127,25 @@ class setmateria:
 		ret = server.set_estado_materia(sid, i.cod, int(i.nota))
 		if not ret:
 			return web.redirect('setmateria?action_ok=2')
-		web.redirect('setmateria?action_ok=1')
+		web.redirect('setmateria?action_ok=1;cod=%s' % i.cod)
 
 class cursandomateria:
 	def GET(self):
 		sid = web.cookies('sid')['sid']
 
-		i = web.input(action_ok = 0)
+		i = web.input(action_ok = 0, cod = None)
 		action_ok = i.action_ok
+		cod = i.cod
+
 		personal = server.get_personal(sid)
-		materias = server.get_materias(personal['carrera'], "")
-		materias = materias.items()
+		matdict = server.get_materias(personal['carrera'], "")
+		materias = matdict.items()
 		materias.sort()
 		aprobadas = server.get_aprobadas(sid)
+		cursando = server.get_cursando(sid)
+		curlist = cursando.keys()
+		curlist.sort()
+
 		web.render('cursandomateria.html')
 
 	def POST(self):
@@ -148,7 +155,7 @@ class cursandomateria:
 		ret = server.set_estado_materia(sid, i.cod, -1)
 		if not ret:
 			return web.redirect('cursandomateria?action_ok=2')
-		web.redirect('cursandomateria?action_ok=1')
+		web.redirect('cursandomateria?action_ok=1;cod=%s' % i.cod)
 
 
 class corregirnota:
