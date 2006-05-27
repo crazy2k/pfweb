@@ -42,7 +42,8 @@
 	<h2>Estas cursando:</h2>
 	<ul>
 	#for $mat in $cursando
-		<li>$mat[0]: $mat[1]</li>
+		<li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[1]
+		</li>
 	#end for
 	</ul>
 	<p>
@@ -54,7 +55,8 @@
 	<h2>Podes cursar:</h2>
 	<ul>
 	#for $mat in $para_cursar
-		<li>$mat[0]: $mat[1]</li>
+		<li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[1]
+		</li>
 	#end for
 	</ul>
 	<p>
@@ -66,7 +68,8 @@
 	<h2>Tenes aprobadas:</h2>
 	<ul>
 	#for $mat in $aprobadas
-		<li>$mat[0]: $mat[2] <b>($mat[1])</b></li>
+		<li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[2]
+		<b>($mat[1])</b></li>
 	#end for
 	</ul>
 	<p>
