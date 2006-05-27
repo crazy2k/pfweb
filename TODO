@@ -2,28 +2,21 @@
 Cosas a agregar
 ---------------
 
-* Listado de materias, separado por obligatorias, optativas y ambas de
-	orientacion o comunes. Marcando en verdecito las aprobadas, y en
-	amarillo las que estan en curso
 * Importar del planifi original
 * Exportar a planifi original o a formato propio con fines de backup
-* Boton en registrar para volver al login (tipo cancelar)
 * Loguito y favicon
-* Ayuda/"¿Que es esto?" en el login
 
 
 Cosas a arreglar
 ----------------
 
 * Revisar el texto de las paginas
-* Mejorar la interfaz, ver como hacer extensible la barra de navegacion
-	(ponerla al costado? hacer mas niveles?)
+* Mejorar la interfaz
 * Manejar bien cuando expira una sesion
 * Revisar el manejo de errores en la registracion, para que no queden usuarios
 	"zombies"
 * Hacer mas lindas las viñetas
 * Mejorar el handling de errores para inputs invalidos
-* En la confirmacion de que se aprobo una materia, mostrar cual fue
 
 
 Cosas a chusmear
@@ -32,5 +25,8 @@ Cosas a chusmear
 	No deberia ser mucho lio... usar -5 para indicarlo en
 	get_estado_materia()?
 * Registracion confirmada por mail, para evitar molestias? O usar un dibujito?
+* Listado de materias, separado por obligatorias, optativas y ambas de
+	orientacion o comunes.
+
 
 
