@@ -86,6 +86,8 @@ class index:
 			promedio = promedio / len(aprobadas)
 		promedio = "%.2f" % promedio
 
+		aprobadas.sort()
+
 		creditos = 0
 		for key in apro_dict:
 			info = server.get_info_materia(personal['carrera'], key)
