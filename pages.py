@@ -289,20 +289,21 @@ class datosmateria:
 		sid = web.cookies('sid')['sid']
 
 		i = web.input('cod')
+
 		personal = server.get_personal(sid)
-		materias = server.get_materias(personal['carrera'], '')
+		matdict = server.get_materias(personal['carrera'], '')
 
 		carrera = personal['carrera']
 		info = server.get_info_materia(carrera, i.cod)
 		info['dep'].sort()
-		inmediatas = [(mat, materias[mat]) for mat in info['dep']]
+		inmediatas = info['dep']
 		inmediatas.sort()
 
-		materias = materias.items()
+		materias = matdict.items()
 		materias.sort()
 
 		correlativas = server.get_correlativas(carrera, i.cod)
-		correlativas = correlativas.items()
+		correlativas = correlativas.keys()
 		correlativas.sort()
 
 		url = 'http://www.fi.uba.ar/guiaestudiante/pdf/%s.pdf' % \

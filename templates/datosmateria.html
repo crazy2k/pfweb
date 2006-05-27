@@ -8,16 +8,29 @@
 
 Créditos: $info.creditos.<br>
 
+
+#def showcode($code)
+	#if '!' in $code
+		No tener $code[1:]: $matdict[$code[1:]]
+	#else if 'c' in $code
+		Tener $code[:-1] créditos
+	#else if 'm' in $code
+		Tener $code[:-1] materias aprobadas
+	#else
+		$code: $matdict[$code]
+	#end if
+#end def
+
 #if $inmediatas
 	Correlativas inmediatas:
 	<ul>
-	#for $cor in $inmediatas
-		#if $personal.aprobadas.has_key($cor[0])
-			<li class=aprobada>$cor[0]: $cor[1]</li>
-		#else if $cor[0] in $personal.cursando:
-			<li class=cursando>$cor[0]: $cor[1]</li>
+	#for $code in $inmediatas
+		#if $personal.aprobadas.has_key($code)
+			<li class=aprobada>$showcode($code)</li>
+		#else if $code in $personal.cursando:
+			<li class=cursando>$showcode($code)</li>
 		#else
-			<li>$cor[0]: $cor[1]</li>
+			<li>$showcode($code)</li>
 		#end if
 	#end for
 	</ul>
@@ -26,13 +39,13 @@ Créditos: $info.creditos.<br>
 #if $correlativas
 	Correlativas completas:
 	<ul>
-	#for $cor in $correlativas
-		#if $personal.aprobadas.has_key($cor[0]):
-			<li class=aprobada>$cor[0]: $cor[1]</li>
-		#else if $cor[0] in $personal.cursando:
-			<li class=cursando>$cor[0]: $cor[1]</li>
+	#for $code in $correlativas
+		#if $personal.aprobadas.has_key($code)
+			<li class=aprobada>$showcode($code)</li>
+		#else if $code in $personal.cursando:
+			<li class=cursando>$showcode($code)</li>
 		#else
-			<li>$cor[0]: $cor[1]</li>
+			<li>$showcode($code)</li>
 		#end if
 	#end for
 	</ul>
@@ -49,14 +62,14 @@ Créditos: $info.creditos.<br>
 
 
 <form method=POST action="datosmateria">
-Elegí la materia de la cual queres obtener información:<br>
+<b>1.</b> Elegí la materia de la cual queres obtener información:<br>
 <select name="cod">
 #for $mat in $materias:
 	<option value="$mat[0]">$mat[0]: $mat[1]</option>
 #end for
 </select><p>
 
-Para terminar, apretá <input type=submit value="Consultar">
+<b>2.</b> Para terminar, apretá <input type=submit value="Consultar">
 </form><p>
 
 #include "footer.html"
