@@ -15,9 +15,11 @@
 <h1>$title</h1>
 
 #try
-	#unless $no_navbar
+	#if $no_navbar
+		#include "altnavbar.html"
+	#else
 		#include "navbar.html"
-	#end unless
+	#end if
 #except
 	#include "navbar.html"
 #end try
