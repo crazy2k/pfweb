@@ -24,6 +24,7 @@ urls = (
 	root + '/personal',		'pages.personal',
 	root + '/chpasswd',		'pages.chpasswd',
 	root + '/register',		'pages.register',
+	root + '/mainhelp',		'pages.mainhelp',
 )
 
 web.internalerror = web.debugerror

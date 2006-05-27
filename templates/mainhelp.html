@@ -1,0 +1,61 @@
+
+#set title = 'Ayuda'
+#include "header.html"
+
+<h2>Información general</h2>
+
+Este es el <i>"planifi web"</i>, un sistema para los estudiantes de la
+<a href="http://www.fi.uba.ar">Facultad de Ingeniería de la UBA</a>, que
+te ayuda en la planificación de tu carrera.<p>
+
+La mejor forma de conocer bien de que te sirve es probarlo, asi que si todavía
+no tenes un usuario, te recomendamos <a href="register">crearte uno</a> y ver
+que te parece.<p>
+
+
+<h2>¿Es un sistema oficial de la facultad?</h2>
+
+Este sistema NO es un sistema oficial de la facultad.<br>
+No tiene ninguna relacion con el cuerpo docente ni no-docente de la facultad,
+ni con el CEI ni ninguna agrupación política estudiantil.<br>
+Fue creado y es mantenido por alumnos de la facultad, podes ver abajo mas
+detalles.<p>
+
+Los datos que agregues aca no tendran ninguna repercusión sobre tus datos
+administrativos oficiales, ni sobre el sistema de inscripciones.<p>
+
+
+<h2>¿Quien lo hizo?</h2>
+
+La idea y el <a href="http://planifi.gforge.lug.fi.uba.ar/">sistema
+original</a> fueron desarrollados por Diego Essaya. Luego varios de los chicos
+y chicas del <a href="http://lug.fi.uba.ar">LugFI</a> colaboraron de distintas
+maneras para la creación de esta interfaz web.<p>
+
+
+<h2>¿A quien le aviso si algo no anda, o anda mal?</h2>
+
+Para cualquier tipo de comentarios, reportes de problemas, sugerencias u otras
+consultas, manda un mail a Alberto Bertogli (albertito@gmail.com).
+
+
+<h2>Información técnica</h2>
+
+El sistema se compone de dos partes: un server XML-RPC que hace de backend
+(llamado <i>planifid</i>), y que es quien implementa toda la lógica,
+persistencia de datos y manejo de sesiones; y un frontend web a modo de
+interfaz (llamado <i>pfweb</i>).<p>
+
+Ambas partes estan escritas usando el lenguaje de programación
+<a href="http://www.python.org">Python</a>; para el desarrollo del backend no
+se utilizaron bibliotecas externas, y para el frontend web se usó el framework
+<a href="http://webpy.org">web.py</a>.
+
+Para cada una existe un repositorio <a href="http://darcs.net">darcs</a> del
+cual pueden bajarse el código:
+<a href="http://auriga.wearlab.de/~alb/repos/pfweb/">frontend</a>,
+<a href="http://auriga.wearlab.de/~alb/repos/planifid/">backend</a>.
+
+
+#include "footer.html"
+

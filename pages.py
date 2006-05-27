@@ -34,6 +34,13 @@ class style:
 		# portable
 		web.render('style.css')
 
+class mainhelp:
+	def GET(self):
+		sid = web.cookies(sid = None)['sid']
+
+		if not sid:
+			no_navbar = 1
+		web.render('mainhelp.html')
 
 class auth:
 	def POST(self):
