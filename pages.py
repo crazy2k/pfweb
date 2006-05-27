@@ -111,6 +111,10 @@ class setmateria:
 		materias.sort()
 		aprobadas = server.get_aprobadas(sid)
 
+		cursando = server.get_cursando(sid)
+		curlist = cursando.keys()
+		curlist.sort()
+
 		web.render('setmateria.html')
 
 	def POST(self):

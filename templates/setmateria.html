@@ -12,13 +12,20 @@
 <h2>Felicitaciones!</h2>
 
 <form method=POST action="setmateria">
-<b>1.</b> Elegi la materia que aprobaste:<br>
+<b>1.</b> Elegi la materia que aprobaste<br>
+Las que estas cursando aparecen en azul, y las que ya aprobaste no
+aparecen.<br>
 <select name="cod">
 #for $mat in $materias:
 	#if $aprobadas.has_key($mat[0])
 		#continue
 	#end if
-	<option value="$mat[0]">$mat[0]: $mat[1]</option>
+	#if $mat[0] in $curlist
+		<option value="$mat[0]" class="cursando">
+			$mat[0]: $mat[1]</option>
+	#else
+		<option value="$mat[0]">$mat[0]: $mat[1]</option>
+	#end if
 #end for
 </select><p>
 

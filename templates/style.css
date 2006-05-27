@@ -114,3 +114,11 @@ td.matlist:last-child {
 	border-right: none;
 }
 
+option.aprobada {
+	color: green;
+}
+
+option.cursando {
+	color: blue;
+}
+
