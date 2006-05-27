@@ -28,7 +28,12 @@
 #end if
 
 #if $creditos
-	Tenes $creditos créditos y $cantaprobadas materias aprobadas.<br>
+	Tenes $creditos créditos
+	#if $cantaprobadas == 1
+		y $cantaprobadas materia aprobada.<br>
+	#else
+		y $cantaprobadas materias aprobadas.<br>
+	#end if
 #end if
 
 <p>
