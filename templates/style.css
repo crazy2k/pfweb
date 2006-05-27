@@ -33,8 +33,12 @@ div.main {
 	border-left: solid 1px #ADA;
 }
 
-div.message {
+div.errmessage {
 	color: #F00;
+}
+
+div.message {
+	color: #070;
 }
 
 div.footer {
