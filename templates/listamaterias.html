@@ -6,29 +6,29 @@
 
 Si dejas el mouse arriba de los códigos que estan en azul, te va a aparecer el
 nombre de la materia correspondiente; y si les haces click vas a la página con
-información detallada de la misma.<p>
+información detallada de la misma.<p/>
 
-<table class=matlist>
+<table class="matlist">
 
 <tr><th>Cod</th><th>Nombre</th><th>Cred</th><th>Correlativas</th></tr>
 
 #for $mat in $materias
 	<a name="MAT$mat.codigo">
 	#if $mat.codigo in $personal.aprobadas.keys():
-		<tr class=aprobada>
+		<tr class="aprobada">
 	#else if $mat.codigo in $personal.cursando:
-		<tr class=cursando>
+		<tr class="cursando">
 	#else
 		<tr>
 	#end if
 
-	<td class=matlist>
+	<td class="matlist">
 		<a href="datosmateria?cod=$mat.codigo">$mat.codigo</a>
 	</td>
-	<td class=matlist>$mat.desc</td>
-	<td class=matlist>$mat.creditos</td>
+	<td class="matlist">$mat.desc</td>
+	<td class="matlist">$mat.creditos</td>
 
-	<td class=matlist>
+	<td class="matlist">
 	#for $c in $mat.dep
 		#if '!' in $c
 			No $c[1:]
