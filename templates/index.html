@@ -4,39 +4,39 @@
 
 
 #if $personal.nombre
-	Hola $personal.nombre!<p>
+	Hola $personal.nombre!<p/>
 #else
-	Hola $personal.username!<p>
+	Hola $personal.username!<p/>
 #end if
 
 #if $area_desc:
-	Estás estudiando $carrera_desc, orientación $area_desc.<br>
+	Estás estudiando $carrera_desc, orientación $area_desc.<br/>
 #else
-	Estás estudiando $carrera_desc.<br>
+	Estás estudiando $carrera_desc.<br/>
 #end if
 
 #if $inicio
-	Comenzaste la carrera el $inicio[0]/$inicio[1]/$inicio[2].<br>
+	Comenzaste la carrera el $inicio[0]/$inicio[1]/$inicio[2].<br/>
 #end if
 
 #if $personal.padron
-	Tu padrón es $personal.padron.<br>
+	Tu padrón es $personal.padron.<br/>
 #end if
 
 #if $promedio
-	Tu promedio (sin aplazos) es $promedio.<br>
+	Tu promedio (sin aplazos) es $promedio.<br/>
 #end if
 
 #if $creditos
 	Tenés $creditos créditos
 	#if $cantaprobadas == 1
-		y $cantaprobadas materia aprobada.<br>
+		y $cantaprobadas materia aprobada.<br/>
 	#else
-		y $cantaprobadas materias aprobadas.<br>
+		y $cantaprobadas materias aprobadas.<br/>
 	#end if
 #end if
 
-<p>
+<p/>
 
 #if $cursando
 	<h2>Estás cursando:</h2>
@@ -46,7 +46,7 @@
 		</li>
 	#end for
 	</ul>
-	<p>
+	<p/>
 #else
 	<h4>No estás cursando materias.</h4>
 #end if
@@ -59,7 +59,7 @@
 		</li>
 	#end for
 	</ul>
-	<p>
+	<p/>
 #else
 	<h4>Las correlatividades no te permiten cursar otras materias.</h4>
 #end if
@@ -72,7 +72,7 @@
 		<b>($mat[1])</b></li>
 	#end for
 	</ul>
-	<p>
+	<p/>
 #else
 	<h4>No tenés materias aprobadas.</h4>
 #end if
