@@ -6,14 +6,14 @@
 
 <h2>$info.codigo: $info.desc</h2>
 
-Créditos: $info.creditos.<br>
+Créditos: $info.creditos.<br/>
 #if $personal.aprobadas.has_key($codigo)
-	Aprobaste esta materia con $personal.aprobadas[$codigo].<br>
+	Aprobaste esta materia con $personal.aprobadas[$codigo].<br/>
 #else if $codigo in $personal.cursando
-	Estas cursando esta materia.<br>
+	Estas cursando esta materia.<br/>
 #end if
 
-<p>
+<p/>
 
 #def showcode($code)
 	#if '!' in $code
@@ -32,9 +32,9 @@ Créditos: $info.creditos.<br>
 	<ul>
 	#for $code in $inmediatas
 		#if $personal.aprobadas.has_key($code)
-			<li class=aprobada>$showcode($code)</li>
+			<li class="aprobada">$showcode($code)</li>
 		#else if $code in $personal.cursando:
-			<li class=cursando>$showcode($code)</li>
+			<li class="cursando">$showcode($code)</li>
 		#else
 			<li>$showcode($code)</li>
 		#end if
@@ -47,36 +47,38 @@ Créditos: $info.creditos.<br>
 	<ul>
 	#for $code in $correlativas
 		#if $personal.aprobadas.has_key($code)
-			<li class=aprobada>$showcode($code)</li>
+			<li class="aprobada">$showcode($code)</li>
 		#else if $code in $personal.cursando:
-			<li class=cursando>$showcode($code)</li>
+			<li class="cursando">$showcode($code)</li>
 		#else
 			<li>$showcode($code)</li>
 		#end if
 	#end for
 	</ul>
 #else
-	Esta materia no tiene correlativas.<br>
+	Esta materia no tiene correlativas.<br/>
 #end if
-<a href="$url">Ver programa</a> (puede no existir, depende de la página de la facu).
+<a href="$url">Ver programa</a> (puede no existir, depende de la página de la
+facu).
 
-<p>
+<p/>
 
 <h2>Nueva consulta</h2>
 
 #end if
 
 
-<form method=POST action="datosmateria">
-<b>1.</b> Elegí la materia de la cual queres obtener información:<br>
+<form method="post" action="datosmateria">
+<b>1.</b> Elegí la materia de la cual queres obtener información:<br/>
 <select name="cod">
 #for $mat in $materias:
 	<option value="$mat[0]">$mat[0]: $mat[1]</option>
 #end for
-</select><p>
+</select><p/>
 
-<b>2.</b> Para terminar, apretá <input type=submit value="Consultar">
-</form><p>
+<b>2.</b> Para terminar, apretá
+<input type="submit" value="Consultar"/>
+</form><p/>
 
 #include "footer.html"
 
