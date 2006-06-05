@@ -4,17 +4,18 @@
 
 
 #if $action_ok == "1"
-	<div class="message">La materia $cod ($matdict[$cod]) fue grabada sin problemas</div><p>
+	<div class="message">La materia $cod ($matdict[$cod]) fue grabada
+	sin problemas</div><p/>
 #else if $action_ok == "2"
-	<div class="errmessage">Hubo un error grabando la materia</div><p>
+	<div class="errmessage">Hubo un error grabando la materia</div><p/>
 #end if
 
 <h2>Felicitaciones!</h2>
 
-<form method=POST action="setmateria">
-<b>1.</b> Elegi la materia que aprobaste<br>
+<form method="post" action="setmateria">
+<b>1.</b> Elegí la materia que aprobaste<br/>
 Las que estas cursando aparecen en azul, y las que ya aprobaste no
-aparecen.<br>
+aparecen.<br/>
 <select name="cod">
 #for $mat in $materias:
 	#if $aprobadas.has_key($mat[0])
@@ -27,7 +28,7 @@ aparecen.<br>
 		<option value="$mat[0]">$mat[0]: $mat[1]</option>
 	#end if
 #end for
-</select><p>
+</select><p/>
 
 <b>2.</b> Y ahora ingresa la nota:
 <select name="nota">
@@ -35,10 +36,10 @@ aparecen.<br>
 	<option>$i</option>
 #end for
 </select>
-<p>
+<p/>
 
-<b>3.</b> Para terminar, apretá <input type=submit value="Aprobe!">
-</form><p>
+<b>3.</b> Para terminar, apretá <input type="submit" value="Aprobe!"/>
+</form><p/>
 
 #include "footer.html"
 
