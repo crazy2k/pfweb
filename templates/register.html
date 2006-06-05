@@ -5,33 +5,33 @@
 
 
 #if $error == '1'
-	<div class="errmessage">El nombre de usuario ya existe, por favor elegí
-	otro</div>
+	<div class="errmessage">El nombre de usuario ya existe, por favor
+	elegí otro.</div>
 #else if $error == '2'
-	<div class="errmessage">Hubo un error grabando tus datos</div>
+	<div class="errmessage">Ocurrió un error grabando tus datos.</div>
 #end if
 
 Para usar el sistema, hace falta que te registres eligiendo un nombre de
-usuario corto y sin espacios (o podes usar tu padrón si no estas muy
-ocurrente), una clave, y los demas campos que aparecen debajo.
-
-<table border="0" cellspacing=0><p>
-<form method=POST action="register">
+usuario corto y sin espacios (o podés usar tu padrón si no estas muy
+ocurrente), una clave, y los demás campos que aparecen debajo.
+<p/>
+<form method="post" action="register">
+<table border="0" cellspacing="0">
 <tr>
 	<td>Nombre de usuario:</td>
-	<td><input type=text name=username size=14></td>
+	<td><input type="text" name="username" size="14"/></td>
 </tr><tr>
 	<td>Clave:</td>
-	<td><input type=password name=passwd size=14></td>
+	<td><input type="password" name="passwd" size="14"/></td>
 </tr><tr>
-	<td>Nombre de verdad:</td>
-	<td><input type=text name=nombre size=30></td>
+	<td>Nombre real:</td>
+	<td><input type="text" name="nombre" size="30"/></td>
 </tr><tr>
 	<td>Padrón:</td>
-	<td><input type=text name=padron size=8></td>
+	<td><input type="text" name="padron" size="8"/></td>
 </tr><tr>
 	<td>Carrera:</td>
-	<td><select name=carrera>
+	<td><select name="carrera">
 	#for $car in $carreras
 		<option value="$car[0]">$car[1]</option>
 	#end for
@@ -39,18 +39,17 @@ ocurrente), una clave, y los demas campos que aparecen debajo.
 </tr><tr>
 	<td>Fecha de inicio:</td>
 	<td>
-	  <input type=text name=inid size=2> /
-	  <input type=text name=inim size=2> /
-	  <input type=text name=iniy value="2000" size=4>
+	  <input type="text" name="inid" size="2"/> /
+	  <input type="text" name="inim" size="2"/> /
+	  <input type="text" name="iniy" value="2000" size="4"/>
 	</td>
-
 </tr><tr>
-	<td colspan=2 align=center>
-	<input type=submit value="Registrarme!">
+	<td colspan="2" align="center">
+	<input type="submit" value="Registrarme!"/>
 	</td>
 </tr>
-</form>
 </table>
+</form>
 
 #include "footer.html"
 
