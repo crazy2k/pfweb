@@ -32,6 +32,7 @@ class style:
 		# es mas dificil de parametrizar dado que solo fuciona en modo
 		# wsgi y no en modo cgi, lo ponemos aca por ahora pues es mas
 		# portable
+		web.header('Content-type', 'text/css')
 		web.render('style.css')
 
 class mainhelp:
