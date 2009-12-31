@@ -29,5 +29,7 @@ urls = (
 
 web.internalerror = web.debugerror
 
-if __name__ == "__main__": web.run(urls)
+if __name__ == "__main__":
+	app = web.application(urls)
+	app.run()
 

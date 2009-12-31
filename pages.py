@@ -2,6 +2,10 @@
 import server
 import web
 
+render_in_context = web.template.render('templates/', base = 'layout')
+render = web.template.render('templates/')
+
+
 #
 # Funciones auxiliares
 #
@@ -21,9 +25,8 @@ def filterstr(s):
 class login:
 	def GET(self):
 		i = web.input(failed = 0, register_ok = 0)
-		failed = i.failed
-		register_ok = i.register_ok
-		web.render('login.html')
+		return render_in_context.login(failed = i.failed,
+			register_ok = i.register_ok)
 
 
 class style:
@@ -33,15 +36,17 @@ class style:
 		# wsgi y no en modo cgi, lo ponemos aca por ahora pues es mas
 		# portable
 		web.header('Content-type', 'text/css')
-		web.render('style.css')
+		return render.style()
 
 class mainhelp:
 	def GET(self):
 		sid = web.cookies(sid = None)['sid']
 
-		if not sid:
-			no_navbar = 1
-		web.render('mainhelp.html')
+		logged_in = False
+		if sid:
+			logged_in = True
+
+		return render_in_context.mainhelp(logged_in)
 
 class auth:
 	def POST(self):
@@ -49,16 +54,16 @@ class auth:
 		user = filterstr(i.user).lower()
 		sid = server.auth(user, i.passwd)
 		if not sid:
-			return web.redirect("login?failed=1")
+			raise web.seeother("login?failed=1")
 		web.setcookie('sid', sid)
-		web.redirect("index")
+		raise web.seeother("index")
 
 
 class logout:
 	def GET(self):
 		sid = web.cookies('sid')['sid']
 		web.setcookie('sid', '')
-		web.redirect("login")
+		raise web.seeother("login")
 
 class index:
 	def GET(self):
@@ -96,7 +101,11 @@ class index:
 
 		cantaprobadas = len(aprobadas)
 
-		web.render('index.html')
+		return render_in_context.index(personal = personal,
+			area_desc = area_desc, carrera_desc = carrera_desc,
+			inicio = inicio, promedio = promedio, creditos = creditos,
+			cantaprobadas = cantaprobadas, cursando = cursando,
+			para_cursar = para_cursar, aprobadas = aprobadas)
 
 
 class setmateria:
@@ -119,7 +128,9 @@ class setmateria:
 		curlist = cursando.keys()
 		curlist.sort()
 
-		web.render('setmateria.html')
+		return render_in_context.setmateria(action_ok = action_ok,
+			cod = cod, matdict = matdict, materias = materias,
+			aprobadas = aprobadas, curlist = curlist)
 
 	def POST(self):
 		sid = web.cookies('sid')['sid']
@@ -127,8 +138,9 @@ class setmateria:
 
 		ret = server.set_estado_materia(sid, i.cod, int(i.nota))
 		if not ret:
-			return web.redirect('setmateria?action_ok=2')
-		web.redirect('setmateria?action_ok=1;cod=%s' % i.cod)
+			raise web.seeother('setmateria?action_ok=2')
+
+		raise web.seeother('setmateria?action_ok=1;cod=%s' % i.cod)
 
 class cursandomateria:
 	def GET(self):
@@ -147,7 +159,8 @@ class cursandomateria:
 		curlist = cursando.keys()
 		curlist.sort()
 
-		web.render('cursandomateria.html')
+		return render_in_context.cursandomateria(action_ok, cod, matdict,
+			materias, aprobadas, cursando)
 
 	def POST(self):
 		sid = web.cookies('sid')['sid']
@@ -155,8 +168,9 @@ class cursandomateria:
 
 		ret = server.set_estado_materia(sid, i.cod, -1)
 		if not ret:
-			return web.redirect('cursandomateria?action_ok=2')
-		web.redirect('cursandomateria?action_ok=1;cod=%s' % i.cod)
+			raise web.seeother('cursandomateria?action_ok=2')
+
+		raise web.seeother('cursandomateria?action_ok=1;cod=%s' % i.cod)
 
 
 class corregirnota:
@@ -176,7 +190,9 @@ class corregirnota:
 		curlist = cursando.items()
 		curlist.sort()
 
-		web.render('corregirnota.html')
+		return render_in_context.corregirnota(action_ok = action_ok,
+			aplist = aplist, curlist = curlist)
+
 
 	def POST(self):
 		sid = web.cookies('sid')['sid']
@@ -184,8 +200,9 @@ class corregirnota:
 
 		ret = server.set_estado_materia(sid, i.cod, int(i.nota))
 		if not ret:
-			return web.redirect('corregirnota?action_ok=2')
-		web.redirect('corregirnota?action_ok=1')
+			raise web.seeother('corregirnota?action_ok=2')
+			
+		raise web.seeother('corregirnota?action_ok=1')
 
 
 class personal:
@@ -199,7 +216,8 @@ class personal:
 
 		areas = server.get_areas(personal['carrera']).items()
 
-		web.render("personal.html")
+		return render_in_context.personal(action_ok = action_ok,
+			personal = personal, areas = areas)
 
 	def POST(self):
 		sid = web.cookies('sid')['sid']
@@ -213,8 +231,9 @@ class personal:
 		ret = server.set_personal(sid, personal)
 
 		if not ret:
-			return web.redirect('personal?action_ok=2')
-		web.redirect('personal?action_ok=1')
+			raise web.seeother('personal?action_ok=2')
+
+		raise web.seeother('personal?action_ok=1')
 
 
 class chpasswd:
@@ -222,29 +241,28 @@ class chpasswd:
 		sid = web.cookies('sid')['sid']
 		i = web.input(action_ok = None)
 		action_ok = i.action_ok
-		web.render("chpasswd.html")
+		return render_in_context.chpasswd(action_ok = action_ok)
 
 	def POST(self):
 		sid = web.cookies('sid')['sid']
 		i = web.input("new1", "new2")
 
 		if i.new1 != i.new2:
-			return web.redirect('chpasswd?action_ok=0')
+			raise web.seeother('chpasswd?action_ok=0')
 
 		new = filterstr(i.new1)
 
 		server.set_passwd(sid, new)
-		web.redirect('chpasswd?action_ok=1')
-
+		raise web.seeother('chpasswd?action_ok=1')
 
 
 class register:
 	def GET(self):
 		i = web.input(error = 0)
-		error = i.error
 
 		carreras = server.get_carreras().items()
-		web.render("register.html")
+		return render_in_context.register(error = i.error,
+			carreras = carreras)
 
 	def POST(self):
 		i = web.input('username', 'passwd', 'carrera',
@@ -257,7 +275,7 @@ class register:
 
 		ret = server.register(username, passwd)
 		if ret != 0:
-			return web.redirect('register?error=1')
+			raise web.seeother('register?error=1')
 
 		sid = server.auth(username, passwd)
 		personal = server.get_personal(sid)
@@ -271,9 +289,11 @@ class register:
 		if not ret:
 			print personal
 			print ret
+			# XXX: (?) Ver que es esto...
 			return
-			return web.redirect('register?error=2')
-		web.redirect('login?register_ok=1')
+			raise web.seeother('register?error=2')
+
+		raise web.seeother('login?register_ok=1')
 
 class datosmateria:
 	def GET(self):
@@ -284,20 +304,15 @@ class datosmateria:
 		# a los datos de las materias
 		i = web.input(cod = None)
 		if i.cod:
-			self.POST()
-			return
+			return self.POST()
 
 		personal = server.get_personal(sid)
 		materias = server.get_materias(personal['carrera'], '')
 		materias = materias.items()
 		materias.sort()
 
-		# tienen valor en el POST, las seteamos a None para poder
-		# usar condicionales en el template
-		info = None
-		correlativas = None
-
-		web.render("datosmateria.html")
+		return render_in_context.datosmateria(personal = personal,
+			materias = materias)
 
 	def POST(self):
 		sid = web.cookies('sid')['sid']
@@ -324,7 +339,10 @@ class datosmateria:
 		url = 'http://www.fi.uba.ar/guiaestudiante/pdf/%s.pdf' % \
 				codigo.replace(".", "")
 
-		web.render("datosmateria.html")
+		return render_in_context.datosmateria(info = info,
+			correlativas = correlativas, personal = personal,
+			materias = materias, codigo = codigo,
+			inmediatas = inmediatas, url = url, matdict = matdict) 
 
 
 class listamaterias:
@@ -344,6 +362,7 @@ class listamaterias:
 			info = server.get_info_materia(carrera, cod)
 			materias.append(info)
 
-		web.render("listamaterias.html")
+		return render_in_context.listamaterias(carrera_desc = carrera_desc,
+			materias = materias, personal = personal, mat_dict = mat_dict)
 
 
