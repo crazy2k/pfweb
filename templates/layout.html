@@ -1,0 +1,52 @@
+$def with (content)
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+  <title>$content.title</title>
+  <link rel="stylesheet" type="text/css" href="style"/>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <meta name="ICBM" content="-37.1114, -56.8678"/>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>$content.title</h1>
+
+$if content.no_navbar == "true":
+	<div class="navbar">
+	<a href="login">Inicio</a><br />
+	<a href="register">Registracion</a><br />
+	<br />
+	<a href="mainhelp">Ayuda</a><br />
+	</div>
+
+$else:
+	<div class="navbar">
+	<a href="index">Principal</a><br/>
+	<a href="setmateria">¡Aprobé una materia!</a><br/>
+	<a href="cursandomateria">Cursando una materia</a><br/>
+	<a href="corregirnota">Corregir una nota</a><br/>
+	<a href="datosmateria">Datos de una materia</a><br/>
+	<a href="listamaterias">Lista de materias</a><br/>
+	<br/>
+	<a href="personal">Datos personales</a><br/>
+	<a href="chpasswd">Cambiar mi clave</a><br/>
+	<a href="mainhelp">Ayuda</a><br/>
+	<a href="logout">Salir</a><br/>
+	</div>
+
+
+<div class="main">
+
+$:content
+
+</div> <!-- main -->
+</div> <!-- container -->
+
+</body>
+</html>
+

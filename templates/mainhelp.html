@@ -1,6 +1,11 @@
+$def with (logged_in)
 
-#set title = 'Ayuda'
-#include "header.html"
+$var title: Ayuda
+
+$if logged_in:
+	$var no_navbar: false
+$else:
+	$var no_navbar: true
 
 <h2>Información general</h2>
 
@@ -56,6 +61,4 @@ cual pueden bajarse el código:
 <a href="http://auriga.wearlab.de/~alb/repos/pfweb/">frontend</a>,
 <a href="http://auriga.wearlab.de/~alb/repos/planifid/">backend</a>.
 
-
-#include "footer.html"
 

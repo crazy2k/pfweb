@@ -1,14 +1,13 @@
+$def with (action_ok)
 
-#set title = 'Cambiar tu clave'
-#include "header.html"
+$var title: Cambiar tu clave
+$var no_navbar: false
 
-
-#if $action_ok == "1"
+$if action_ok == "1":
 	<div class="message">La clave fue cambiada sin problemas.</div><p/>
-#else if $action_ok == "0"
+$elif action_ok == "0":
 	<div class="errmessage">Las dos claves ingresadas no concuerdan, por
 	favor intentá nuevamente.</div><p/>
-#end if
 
 <h2>Cambiar tu clave</h2>
 
@@ -38,7 +37,4 @@ Una buena estrategia si queres una clave segura es pensar en una frase facil y
 recordable, y escribirla toda junta, sin espacios. Por ejemplo, si tenes
 hambre frecuentemente podes usar "tengohambre"; o si sos un ñoño de Análisis
 podes poner "gaussidolo".<p/>
-
-
-#include "footer.html"
 

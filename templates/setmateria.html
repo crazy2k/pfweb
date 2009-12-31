@@ -1,14 +1,13 @@
+$def with (action_ok, cod, matdict, materias, aprobadas, curlist)
 
-#set title = '¡Aprobe una materia!'
-#include "header.html"
+$var title: ¡Aprobe una materia!
+$var no_navbar: false
 
-
-#if $action_ok == "1"
-	<div class="message">La materia $cod ($matdict[$cod]) fue grabada
+$if action_ok == "1":
+	<div class="message">La materia $cod ($matdict[cod]) fue grabada
 	sin problemas</div><p/>
-#else if $action_ok == "2"
+$elif action_ok == "2":
 	<div class="errmessage">Hubo un error grabando la materia</div><p/>
-#end if
 
 <h2>Felicitaciones!</h2>
 
@@ -17,29 +16,23 @@
 Las que estas cursando aparecen en azul, y las que ya aprobaste no
 aparecen.<br/>
 <select name="cod">
-#for $mat in $materias:
-	#if $aprobadas.has_key($mat[0])
-		#continue
-	#end if
-	#if $mat[0] in $curlist
+$for mat in materias:
+	$if aprobadas.has_key(mat[0]):
+		$continue
+	$if mat[0] in curlist:
 		<option value="$mat[0]" class="cursando">
 			$mat[0]: $mat[1]</option>
-	#else
+	$else:
 		<option value="$mat[0]">$mat[0]: $mat[1]</option>
-	#end if
-#end for
 </select><p/>
 
 <b>2.</b> Y ahora ingresa la nota:
 <select name="nota">
-#for i in range(4, 11)
+$for i in range(4, 11):
 	<option>$i</option>
-#end for
 </select>
 <p/>
 
 <b>3.</b> Para terminar, apretá <input type="submit" value="Aprobe!"/>
 </form><p/>
-
-#include "footer.html"
 

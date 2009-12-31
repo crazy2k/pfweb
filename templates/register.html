@@ -1,15 +1,13 @@
+$def with (error, carreras)
 
-#set title = 'Registración'
-#set no_navbar = True
-#include "header.html"
+$var title: Registración
+$var no_navbar: true
 
-
-#if $error == '1'
+$if error == '1':
 	<div class="errmessage">El nombre de usuario ya existe, por favor
 	elegí otro.</div>
-#else if $error == '2'
+$elif error == '2':
 	<div class="errmessage">Ocurrió un error grabando tus datos.</div>
-#end if
 
 Para usar el sistema, hace falta que te registres eligiendo un nombre de
 usuario corto y sin espacios (o podés usar tu padrón si no estas muy
@@ -31,11 +29,11 @@ ocurrente), una clave, y los demás campos que aparecen debajo.
 	<td><input type="text" name="padron" size="8"/></td>
 </tr><tr>
 	<td>Carrera:</td>
-	<td><select name="carrera">
-	#for $car in $carreras
-		<option value="$car[0]">$car[1]</option>
-	#end for
-	</select></td>
+	<td>
+		<select name="carrera">
+		$for car in carreras:
+			<option value="$car[0]">$car[1]</option>
+		</select></td>
 </tr><tr>
 	<td>Fecha de inicio:</td>
 	<td>
@@ -50,6 +48,4 @@ ocurrente), una clave, y los demás campos que aparecen debajo.
 </tr>
 </table>
 </form>
-
-#include "footer.html"
 

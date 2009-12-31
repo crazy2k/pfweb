@@ -1,19 +1,16 @@
+$def with (failed, register_ok)
 
-#set title = 'planifi'
-#set no_navbar = True
-#include "header.html"
+$var title: planifi
+$var no_navbar: true
 
+$if failed:
+	Usuario y/o clave inválidos. Por favor intentá nuevamente.<p/>
 
-#if $failed
-Usuario y/o clave inválidos. Por favor intentá nuevamente.<p/>
-#end if
-
-#if $register_ok
-Tu registración se completo sin problemas. Ahora ingresá el usuario y la clave
-que elegiste debajo, para comenzar a usar planifi!<br/>
-<hr/>
-<p/>
-#end if
+$if register_ok:
+	Tu registración se completo sin problemas. Ahora ingresá el usuario y la clave
+	que elegiste debajo, para comenzar a usar planifi!<br/>
+	<hr/>
+	<p/>
 
 Hola! Por favor ingresa tu usuario y tu clave.<p/>
 
@@ -40,6 +37,4 @@ acá</a>.<p/>
 
 Si querés saber mas sobre el sistema, consulta la
 <a href="mainhelp">ayuda</a>.
-
-#include "footer.html"
 
