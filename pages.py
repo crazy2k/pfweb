@@ -1,6 +1,7 @@
 
 import server
 import web
+import os
 
 render_in_context = web.template.render('templates/', base = 'layout')
 render = web.template.render('templates/')
@@ -29,14 +30,44 @@ class login:
 			register_ok = i.register_ok)
 
 
-class style:
+class static:
 	def GET(self):
+		"""Utilizando <base-URL>/static?file=<file>, si el archivo
+		<file> se halla en el directorio definido en static_dir, se
+		devuelve su contenido.
+		
+		"""
 		# deberia estar en static/ y servirse estaticamente, pero como
 		# es mas dificil de parametrizar dado que solo fuciona en modo
 		# wsgi y no en modo cgi, lo ponemos aca por ahora pues es mas
 		# portable
-		web.header('Content-type', 'text/css')
-		return render.style()
+		i = web.input()
+
+		static_dir = './static/'
+
+		fpath = os.path.join(static_dir, i.file)
+		if os.path.isfile(fpath):
+
+			# elegimos el content-type en base a la extension;
+			# podria usarse el modulo mimetypes, pero escribir los
+			# tipos nosotros nos da la flexibilidad para elegir lo
+			# mas portable
+			ext = os.path.splitext(fpath)[1]
+			if ext == '.css':
+				ctype = 'text/css'
+			elif ext == '.js':
+				ctype = 'text/javascript'
+			else:
+				ctype = 'text/plain'
+
+			web.header('Content-type', ctype)
+
+			fd = open(fpath)
+			content = fd.read()
+			fd.close()
+
+			return content
+
 
 class mainhelp:
 	def GET(self):
@@ -255,19 +286,75 @@ class chpasswd:
 		server.set_passwd(sid, new)
 		raise web.seeother('chpasswd?action_ok=1')
 
+class pieces:
+	def GET(self):
+		i = web.input()
+
+		# guardar la funcion pedida
+		f = getattr(pieces, i.func)
+
+		# limpiar el storage (para que no tenga el nombre de
+		# la funcion)
+		del i.func
+
+		# llamar a la funcion
+		return f(**i)
+
+	@classmethod
+	def facslist(cls, uni):
+		facs = server.get_facultades(uni).items()
+		return render._facultad_options(facs)
+
+	@classmethod
+	def carrslist(cls, uni, fac):
+		carrs = server.get_carreras(uni, fac).items()
+		return render._carrera_options(carrs)
+
+	@classmethod
+	def datoscarrera(cls, num):
+		unis, facs, carrs = data_3tuple(itemized = True)
+
+		uni_options = render._universidad_options(unis)
+		fac_options = render._facultad_options(facs)
+		carr_options = render._carrera_options(carrs)
+
+		return render._datoscarrera(num, uni_options,
+			fac_options, carr_options)
+	
+	@classmethod
+	def tabcarrera(cls, num):
+		return render._tab_carrera(num)
+
+
+
+def data_3tuple(uni = '', fac = '', itemized = False):
+
+		unis = server.get_universidades()
+		if not uni:
+			uni = unis.keys()[0]
+
+		facs = server.get_facultades(uni)
+		if not fac:
+			fac = facs.keys()[0].split('/')[-1]
+
+		carrs = server.get_carreras(uni, fac)
+
+		t = (unis, facs, carrs)
+		if itemized:
+			t = tuple(d.items() for d in t)
+
+		return t
 
 class register:
 	def GET(self):
-		i = web.input(error = 0)
+		i = web.input(error = 0, num = 1)
 
-		carreras = server.get_carreras().items()
-		return render_in_context.register(error = i.error,
-			carreras = carreras)
+		datoscarrera = pieces.datoscarrera(i.num)
+		return render_in_context.register(i.error, datoscarrera)
 
 	def POST(self):
-		i = web.input('username', 'passwd', 'carrera',
-				'inid', 'inim', 'iniy',
-				nombre = '', padron = '')
+		i = web.input('username', 'passwd',
+				nombre = '')
 
 		username = filterstr(i.username)
 		username = username.lower()
@@ -294,6 +381,7 @@ class register:
 			raise web.seeother('register?error=2')
 
 		raise web.seeother('login?register_ok=1')
+
 
 class datosmateria:
 	def GET(self):
