@@ -8,8 +8,14 @@ conn = xmlrpclib.ServerProxy("http://localhost:8027")
 # Funciones publicas
 #
 
-def get_carreras():
-	return conn.get_carreras()
+def get_universidades():
+	return conn.get_universidades()
+
+def get_facultades(uni = ''):
+	return conn.get_facultades(uni)
+
+def get_carreras(uni = '', fac = ''):
+	return conn.get_carreras(uni, fac)
 
 def get_areas(carrera):
 	return conn.get_areas(carrera)
