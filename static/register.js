@@ -23,21 +23,42 @@ $(document).ready(function() {
 
 
 	});
-	/* onclick para las opciones del select de universidad */
-	$('select.uni_options').live('change', function() {
-		var sel = $(this);
-		var opt = $(this).children('option:selected'); 
 
-		var uni = opt.attr('value');
-		var num = sel.attr('name').split('_')[1];
+	function val_from_sel(sel_selector) {
+		var opt = $(sel_selector).children('option:selected');
+		return opt.attr('value')
+	}
+
+	function num_from_sel(sel_selector) {
+		return $(sel_selector).attr('name').split('_')[1];
+	}
+
+	/* onchange para el select de universidad */
+	$('select.uni_options').live('change', function() {
+		var uni = val_from_sel(this);
+		var num = num_from_sel(this);
 
 		$.get('pieces?func=facslist&uni=' + uni,
 			function(data) {
 				var s = $('select.fac_options[name = fac_' + num + ']')
 				s.html(data);
+				s.trigger('change');
 			});
+	});
 
+	/* onchange para el select de facultad */
+	$('select.fac_options').live('change', function() {
+		var vals = val_from_sel(this).split('/');
+		var uni = vals[0];
+		var fac = vals[1];
 
+		var num = num_from_sel(this);
+
+		$.get('pieces?func=carrslist&uni=' + uni + '&fac=' + fac,
+			function(data) {
+				var s = $('select.carr_options[name = carr_' + num + ']')
+				s.html(data);
+			});
 	});
 });
 
