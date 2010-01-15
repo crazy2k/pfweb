@@ -1,0 +1,172 @@
+
+/*
+ * Layout
+ */
+
+
+body {
+	font-family: sans-serif;
+	color: #000000;
+	background-color: #E9F8E9;
+}
+
+div.container {
+	width: 80%;
+	margin: 10px auto;
+	border: solid 1px #ADA;
+	background: #FFFFFF;
+}
+
+div.navbar {
+	float: left;
+	width: 17%;
+	margin: 0;
+	padding: 1em 0 0 1em;
+	background-color: #FFFFFF;
+	font-size: x-small;
+}
+
+div.main {
+	/* El margen es 3% + margen del navbar */
+	margin-left: 20%;
+	padding: 1em;
+	border-left: solid 1px #ADA;
+}
+
+div.errmessage {
+	color: #F00;
+}
+
+div.message {
+	color: #070;
+}
+
+div.footer {
+	clear: both;
+	margin: 0;
+	padding: .5em;
+	color: #333;
+	background-color: #d2e9ff;
+	border-top: 1px solid #ADA;
+}
+
+
+/*
+ * Elementos normales
+ */
+
+h1 {
+	font-size: x-large;
+	padding-left: 10px;
+	background-color: #d2e9ff;
+	border: 1px dotted #01a2ed;
+}
+
+h2 {
+	font-size: medium;
+	color: #2b8fc5;
+	border-bottom: 1px solid #CCC;
+}
+
+a {
+	text-decoration:none;
+	color: #4322FF;
+}
+
+a:hover {
+	text-decoration:none;
+	color: #c00;
+}
+
+tt {
+	color: #000;
+	background:#eee;
+}
+
+
+li.aprobada {
+	color: green;
+}
+
+li.cursando {
+	color: blue;
+}
+
+
+table.matlist {
+	border: none;
+	border-collapse: collapse;
+}
+
+tr.aprobada {
+	background: #D0F0D0;
+}
+
+tr.cursando {
+	background: #D0D0F0;
+}
+
+td.matlist {
+	border-right: solid 1px;
+	padding: 6pt 6pt 0pt 6pt;
+}
+td.matlist:last-child {
+	border-right: none;
+}
+
+option.aprobada {
+	color: green;
+}
+
+option.cursando {
+	color: blue;
+}
+
+/*
+ * Tabs
+ */
+
+
+ul.idTabs {
+	padding: 0px;
+	margin: 10px 0px 0px 0px;
+}
+
+ul.idTabs li {
+	float: left;
+	list-style: none;
+}
+
+ul.idTabs li a {
+	display: block;
+	/*background-color: #ABB7FF;*/
+	background-color: #b8c2ff;
+	padding: 8px 10px 8px 10px;
+	color: #4322FF;
+	font-weight: bold;
+	font-size: small;
+
+	/*border-right: 2px solid white;*/
+	margin-right: 2px;
+}
+
+ul.idTabs li a.selected {
+	background-color: #E9EEF8;
+	cursor: default;
+	color: black;
+	font-weight: bold;
+}
+
+ul.idTabs li a.add_button {
+	cursor: pointer;
+}
+
+
+div.idTabs_content {
+	background-color: #E9EEF8;
+	padding: 10px;
+	margin: 0px 0px 10px 0px;
+	clear: left;
+	width: 0px auto;
+	display: none;
+}
