@@ -5,10 +5,17 @@ $def with (content)
 <html>
 <head>
   <title>$content.title</title>
-  <link rel="stylesheet" type="text/css" href="style"/>
+  <link rel="stylesheet" type="text/css" href="static?file=style.css"/>
   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   <meta name="ICBM" content="-37.1114, -56.8678"/>
+
+  $# FIXME: Ver como hacer para que esto se cargue solo con el template register
+  <script type="text/javascript" src="static?file=jquery.js"></script>
+  <script type="text/javascript" src="static?file=jquery.idTabs.min.js"></script>
+  <script type="text/javascript" src="static?file=register.js"></script>
+
 </head>
+
 
 <body>
 
