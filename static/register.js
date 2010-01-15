@@ -5,22 +5,20 @@ $(document).ready(function() {
 	$('ul.idTabs li a.add_button').click(function() {
 		num = num + 1;
 
-		function refresh() {
-			$('ul.idTabs').idTabs(0);
+		function refresh(num) {
+			$('ul.idTabs').idTabs(num - 1);
 		}
 
 		$.get('pieces?func=datoscarrera&num=' + num,
 			function(data) {
 				$("div#datoscarreras").append(data);
-				refresh();
-			});
 
-		$.get('pieces?func=tabcarrera&num=' + num,
-			function(data) {
-				$("li#add_button_holder").before(data);
-				refresh();
+				$.get('pieces?func=tabcarrera&num=' + num,
+					function(data) {
+						$("li#add_button_holder").before(data);
+						refresh(num);
+					});
 			});
-
 
 	});
 
