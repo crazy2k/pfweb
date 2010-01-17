@@ -285,15 +285,19 @@ class pieces:
 	def GET(self):
 		i = web.input()
 
-		# save requested function
-		f = getattr(pieces, i.func)
+		avl_funcs = ['facslist', 'carrslist', 'datoscarrera',
+			'tabcarrera']
 
-		# clean the storage (so it doesn't have the function's name
-		# anymore)
-		del i.func
+		if i.func in avl_funcs:
+			# save requested function
+			f = getattr(pieces, i.func)
 
-		# call the function
-		return f(**i)
+			# clean the storage (so it doesn't have the function's name
+			# anymore)
+			del i.func
+
+			# call the function
+			return f(**i)
 
 	@classmethod
 	def facslist(cls, uni):
