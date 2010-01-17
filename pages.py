@@ -1,22 +1,15 @@
 
-import server
-import web
 import os
+
+import web
+
+import server
+import utils
+
+
 
 render_in_context = web.template.render('templates/', base = 'layout')
 render = web.template.render('templates/')
-
-
-#
-# Funciones auxiliares
-#
-
-def filterstr(s):
-	import string
-	allowed = string.ascii_letters + string.digits
-	new = [c for c in s if c in allowed]
-	new = string.join(new, '')
-	return new
 
 
 #
@@ -82,7 +75,7 @@ class mainhelp:
 class auth:
 	def POST(self):
 		i = web.input('user', 'passwd')
-		user = filterstr(i.user).lower()
+		user = utils.filterstr(i.user).lower()
 		sid = server.auth(user, i.passwd)
 		if not sid:
 			raise web.seeother("login?failed=1")
@@ -281,7 +274,7 @@ class chpasswd:
 		if i.new1 != i.new2:
 			raise web.seeother('chpasswd?action_ok=0')
 
-		new = filterstr(i.new1)
+		new = utils.filterstr(i.new1)
 
 		server.set_passwd(sid, new)
 		raise web.seeother('chpasswd?action_ok=1')
@@ -356,9 +349,9 @@ class register:
 		i = web.input('username', 'passwd',
 				nombre = '')
 
-		username = filterstr(i.username)
+		username = utils.filterstr(i.username)
 		username = username.lower()
-		passwd = filterstr(i.passwd)
+		passwd = utils.filterstr(i.passwd)
 
 		ret = server.register(username, passwd)
 		if ret != 0:
