@@ -25,15 +25,17 @@ class login:
 
 class static:
 	def GET(self):
-		"""Utilizando <base-URL>/static?file=<file>, si el archivo
-		<file> se halla en el directorio definido en static_dir, se
-		devuelve su contenido.
+		"""By doing GET <URL for this page>?file=<file>, if the file
+		<file> is in the directory specified by static_dir, then its
+		content is returned.
+
+		The standard way to do this is by placing the files in a
+		static/ directory placed where the script that runs the web.py
+		server is, and serving the files statically. However, that
+		seems to work with WSGI but not with CGI mode. This sould be
+		more portable.
 		
 		"""
-		# deberia estar en static/ y servirse estaticamente, pero como
-		# es mas dificil de parametrizar dado que solo fuciona en modo
-		# wsgi y no en modo cgi, lo ponemos aca por ahora pues es mas
-		# portable
 		i = web.input()
 
 		static_dir = './static/'
@@ -41,10 +43,10 @@ class static:
 		fpath = os.path.join(static_dir, i.file)
 		if os.path.isfile(fpath):
 
-			# elegimos el content-type en base a la extension;
-			# podria usarse el modulo mimetypes, pero escribir los
-			# tipos nosotros nos da la flexibilidad para elegir lo
-			# mas portable
+			# We choose the content-type by looking at the file's
+			# extension. The mimetypes module could be used
+			# instead, but doing it by hand gives us the
+			# flexibility to choose what is most portable.
 			ext = os.path.splitext(fpath)[1]
 			if ext == '.css':
 				ctype = 'text/css'
@@ -283,14 +285,14 @@ class pieces:
 	def GET(self):
 		i = web.input()
 
-		# guardar la funcion pedida
+		# save requested function
 		f = getattr(pieces, i.func)
 
-		# limpiar el storage (para que no tenga el nombre de
-		# la funcion)
+		# clean the storage (so it doesn't have the function's name
+		# anymore)
 		del i.func
 
-		# llamar a la funcion
+		# call the function
 		return f(**i)
 
 	@classmethod
