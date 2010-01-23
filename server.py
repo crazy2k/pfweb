@@ -74,15 +74,15 @@ def data_3tuple(uni = '', fac = '', itemized = False):
 
     """
 
-    unis = server.get_universities()
+    unis = get_universities()
     if not uni:
         uni = unis.keys()[0]
 
-    facs = server.get_faculties(uni)
+    facs = get_faculties(uni)
     if not fac:
         fac = facs.keys()[0].split('/')[-1]
 
-    carrs = server.get_programs(uni, fac)
+    carrs = get_programs(uni, fac)
 
     t = (unis, facs, carrs)
     if itemized:
