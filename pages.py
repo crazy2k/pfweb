@@ -324,9 +324,6 @@ class pieces:
         return render._progtab(num)
 
 
-
-
-
 class register:
     def GET(self):
         i = web.input(error = 0, num = 1)
