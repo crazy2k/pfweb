@@ -312,9 +312,9 @@ class pieces:
     def progdata(cls, num):
         unis, facs, carrs = server.data_3tuple(itemized = True)
 
-        uni_options = render._universidad_options(unis)
-        fac_options = render._facultad_options(facs)
-        carr_options = render._carrera_options(carrs)
+        uni_options = render._options_uni(unis)
+        fac_options = render._options_fac(facs)
+        carr_options = render._options_prog(carrs)
 
         return render._progdata(num, uni_options,
             fac_options, carr_options)
