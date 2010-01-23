@@ -13,15 +13,8 @@ render = web.template.render('templates/')
 
 
 #
-# Pages
+# Special purpose pages
 #
-
-class login:
-    def GET(self):
-        i = web.input(failed = 0, register_ok = 0)
-        return render_in_context.login(failed = i.failed,
-            register_ok = i.register_ok)
-
 
 class static:
     def GET(self):
@@ -63,6 +56,100 @@ class static:
 
         else:
             return web.notfound()
+
+
+class pieces:
+    def GET(self):
+        i = web.input()
+
+        avl_funcs = ['facslist', 'progslist', 'progdata',
+            'progtab']
+
+        if i.func in avl_funcs:
+            # save requested function
+            f = getattr(pieces, i.func)
+
+            # clean the storage (so it doesn't have the function's name
+            # anymore)
+            del i.func
+
+            # call the function
+            return f(**i)
+
+    @classmethod
+    def facslist(cls, uni):
+        facs = server.get_faculties(uni).items()
+        return render._options_fac(facs)
+
+    @classmethod
+    def progslist(cls, uni, fac):
+        carrs = server.get_programs(uni, fac).items()
+        return render._options_prog(carrs)
+
+    @classmethod
+    def progdata(cls, num):
+        unis, facs, carrs = server.data_3tuple(itemized = True)
+
+        uni_options = render._options_uni(unis)
+        fac_options = render._options_fac(facs)
+        carr_options = render._options_prog(carrs)
+
+        return render._progdata(num, uni_options,
+            fac_options, carr_options)
+    
+    @classmethod
+    def progtab(cls, num):
+        return render._progtab(num)
+
+
+
+#
+# Ordinary pages
+#
+
+class register:
+    def GET(self):
+        i = web.input(error = 0, num = 1)
+
+        progdata = pieces.progdata(i.num)
+        return render_in_context.register(i.error, progdata)
+
+    def POST(self):
+        i = web.input('username', 'passwd',
+                nombre = '')
+
+        username = utils.filterstr(i.username)
+        username = username.lower()
+        passwd = utils.filterstr(i.passwd)
+
+        ret = server.register(username, passwd)
+        if ret != 0:
+            raise web.seeother('register?error=1')
+
+        sid = server.auth(username, passwd)
+        personal = server.get_personal(sid)
+        personal['nombre'] = i.nombre
+        personal['padron'] = i.padron
+        personal['carrera'] = i.carrera
+        personal['hace_tesis'] = 0
+        personal['inicio'] = (int(i.inid), int(i.inim), int(i.iniy))
+        personal['area'] = server.get_areas(i.carrera).keys()[0]
+        ret = server.set_personal(sid, personal)
+        if not ret:
+            print personal
+            print ret
+            # XXX: (?) Ver que es esto...
+            return
+            raise web.seeother('register?error=2')
+
+        raise web.seeother('login?register_ok=1')
+
+
+class login:
+    def GET(self):
+        i = web.input(failed = 0, register_ok = 0)
+        return render_in_context.login(failed = i.failed,
+            register_ok = i.register_ok)
 
 
 class mainhelp:
@@ -281,87 +368,6 @@ class chpasswd:
 
         server.set_passwd(sid, new)
         raise web.seeother('chpasswd?action_ok=1')
-
-class pieces:
-    def GET(self):
-        i = web.input()
-
-        avl_funcs = ['facslist', 'progslist', 'progdata',
-            'progtab']
-
-        if i.func in avl_funcs:
-            # save requested function
-            f = getattr(pieces, i.func)
-
-            # clean the storage (so it doesn't have the function's name
-            # anymore)
-            del i.func
-
-            # call the function
-            return f(**i)
-
-    @classmethod
-    def facslist(cls, uni):
-        facs = server.get_faculties(uni).items()
-        return render._options_fac(facs)
-
-    @classmethod
-    def progslist(cls, uni, fac):
-        carrs = server.get_programs(uni, fac).items()
-        return render._options_prog(carrs)
-
-    @classmethod
-    def progdata(cls, num):
-        unis, facs, carrs = server.data_3tuple(itemized = True)
-
-        uni_options = render._options_uni(unis)
-        fac_options = render._options_fac(facs)
-        carr_options = render._options_prog(carrs)
-
-        return render._progdata(num, uni_options,
-            fac_options, carr_options)
-    
-    @classmethod
-    def progtab(cls, num):
-        return render._progtab(num)
-
-
-class register:
-    def GET(self):
-        i = web.input(error = 0, num = 1)
-
-        progdata = pieces.progdata(i.num)
-        return render_in_context.register(i.error, progdata)
-
-    def POST(self):
-        i = web.input('username', 'passwd',
-                nombre = '')
-
-        username = utils.filterstr(i.username)
-        username = username.lower()
-        passwd = utils.filterstr(i.passwd)
-
-        ret = server.register(username, passwd)
-        if ret != 0:
-            raise web.seeother('register?error=1')
-
-        sid = server.auth(username, passwd)
-        personal = server.get_personal(sid)
-        personal['nombre'] = i.nombre
-        personal['padron'] = i.padron
-        personal['carrera'] = i.carrera
-        personal['hace_tesis'] = 0
-        personal['inicio'] = (int(i.inid), int(i.inim), int(i.iniy))
-        personal['area'] = server.get_areas(i.carrera).keys()[0]
-        ret = server.set_personal(sid, personal)
-        if not ret:
-            print personal
-            print ret
-            # XXX: (?) Ver que es esto...
-            return
-            raise web.seeother('register?error=2')
-
-        raise web.seeother('login?register_ok=1')
 
 
 class datosmateria:
