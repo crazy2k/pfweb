@@ -4,10 +4,10 @@ $var title: Estoy cursando una materia
 $var no_navbar: false
 
 $if action_ok == "1":
-	<div class="message">La materia $cod ($matdict[cod]) fue
-		grabada sin problemas.</div><p/>
+    <div class="message">La materia $cod ($matdict[cod]) fue
+        grabada sin problemas.</div><p/>
 $elif action_ok == "2":
-	<div class="errmessage">Hubo un error grabando la materia</div><p/>
+    <div class="errmessage">Hubo un error grabando la materia</div><p/>
 
 <h2>Registrar que estas cursando una materia</h2>
 
@@ -15,11 +15,11 @@ $elif action_ok == "2":
 <b>1.</b> Elegi la materia que estas cursando:<br/>
 <select name="cod">
 $for mat in materias:
-	$if aprobadas.has_key(mat[0]):
-		$continue
-	$if cursando.has_key(mat[0]):
-		$continue
-	<option value="$mat[0]">$mat[0]: $mat[1]</option>
+    $if aprobadas.has_key(mat[0]):
+        $continue
+    $if cursando.has_key(mat[0]):
+        $continue
+    <option value="$mat[0]">$mat[0]: $mat[1]</option>
 </select><p/>
 
 <b>2.</b> Para terminar, apretá

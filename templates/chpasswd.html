@@ -4,19 +4,19 @@ $var title: Cambiar tu clave
 $var no_navbar: false
 
 $if action_ok == "1":
-	<div class="message">La clave fue cambiada sin problemas.</div><p/>
+    <div class="message">La clave fue cambiada sin problemas.</div><p/>
 $elif action_ok == "0":
-	<div class="errmessage">Las dos claves ingresadas no concuerdan, por
-	favor intentá nuevamente.</div><p/>
+    <div class="errmessage">Las dos claves ingresadas no concuerdan, por
+    favor intentá nuevamente.</div><p/>
 
 <h2>Cambiar tu clave</h2>
 
 <form method="post" action="chpasswd">
 
 <b>1.</b> Escribi tu clave nueva:
-		<input type="password" size=12 name="new1"/><br/>
+        <input type="password" size=12 name="new1"/><br/>
 <b>2.</b> Escribila una vez mas:
-		<input type="password" size=12 name="new2"/><br/>
+        <input type="password" size=12 name="new2"/><br/>
 <p/>
 <b>3.</b> Para terminar, apretá
 <input type="submit" value="Cambiar mi clave"/>

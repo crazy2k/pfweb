@@ -4,63 +4,63 @@ $var title: Principal
 $var no_navbar: false
 
 $if personal['nombre']:
-	Hola $personal['nombre']!<p/>
+    Hola $personal['nombre']!<p/>
 $else:
-	Hola $personal['username']!<p/>
+    Hola $personal['username']!<p/>
 
 $if area_desc:
-	Estás estudiando $carrera_desc, orientación $area_desc.<br/>
+    Estás estudiando $carrera_desc, orientación $area_desc.<br/>
 $else:
-	Estás estudiando $carrera_desc.<br/>
+    Estás estudiando $carrera_desc.<br/>
 
 $if inicio:
-	Comenzaste la carrera el $inicio[0]/$inicio[1]/$inicio[2].<br/>
+    Comenzaste la carrera el $inicio[0]/$inicio[1]/$inicio[2].<br/>
 
 $if personal['padron']:
-	Tu padrón es $personal['padron'].<br/>
+    Tu padrón es $personal['padron'].<br/>
 
 $if promedio:
-	Tu promedio (sin aplazos) es $promedio.<br/>
+    Tu promedio (sin aplazos) es $promedio.<br/>
 
 $if creditos:
-	Tenés $creditos créditos
-	$if cantaprobadas == 1:
-		y $cantaprobadas materia aprobada.<br/>
-	$else:
-		y $cantaprobadas materias aprobadas.<br/>
+    Tenés $creditos créditos
+    $if cantaprobadas == 1:
+        y $cantaprobadas materia aprobada.<br/>
+    $else:
+        y $cantaprobadas materias aprobadas.<br/>
 
 <p/>
 
 $if cursando:
-	<h2>Estás cursando:</h2>
-	<ul>
-	$for mat in cursando:
-		<li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[1]
-		</li>
-	</ul>
-	<p/>
+    <h2>Estás cursando:</h2>
+    <ul>
+    $for mat in cursando:
+        <li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[1]
+        </li>
+    </ul>
+    <p/>
 $else:
-	<h4>No estás cursando materias.</h4>
+    <h4>No estás cursando materias.</h4>
 
 $if para_cursar:
-	<h2>Podés cursar:</h2>
-	<ul>
-	$for mat in para_cursar:
-		<li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[1]
-		</li>
-	</ul>
-	<p/>
+    <h2>Podés cursar:</h2>
+    <ul>
+    $for mat in para_cursar:
+        <li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[1]
+        </li>
+    </ul>
+    <p/>
 $else:
-	<h4>Las correlatividades no te permiten cursar otras materias.</h4>
+    <h4>Las correlatividades no te permiten cursar otras materias.</h4>
 
 $if aprobadas:
-	<h2>Ténes aprobadas:</h2>
-	<ul>
-	$for mat in aprobadas:
-		<li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[2]
-		<b>($mat[1])</b></li>
-	</ul>
-	<p/>
+    <h2>Ténes aprobadas:</h2>
+    <ul>
+    $for mat in aprobadas:
+        <li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[2]
+        <b>($mat[1])</b></li>
+    </ul>
+    <p/>
 $else:
-	<h4>No tenés materias aprobadas.</h4>
+    <h4>No tenés materias aprobadas.</h4>
 

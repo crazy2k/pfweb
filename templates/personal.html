@@ -4,38 +4,38 @@ $var title: Datos personales
 $var no_navbar: false
 
 $if action_ok == "1":
-	<div class="message">Tus datos se grabaron sin problemas</div>
+    <div class="message">Tus datos se grabaron sin problemas</div>
 $elif action_ok == "2":
-	<div class="errmessage">Hubo un error grabando tus datos</div>
+    <div class="errmessage">Hubo un error grabando tus datos</div>
 
 <table border="0" cellspacing="0"><p/>
 <form method="post" action="personal">
 <tr>
-	<td>Nombre:</td>
-	<td><input type="text" name="nombre" size="30" value="$personal['nombre']"/>
-	</td>
+    <td>Nombre:</td>
+    <td><input type="text" name="nombre" size="30" value="$personal['nombre']"/>
+    </td>
 </tr><tr>
-	<td>Padrón:</td>
-	<td><input type="text" name="padron" size="8" value="$personal['padron']"/>
-	</td>
+    <td>Padrón:</td>
+    <td><input type="text" name="padron" size="8" value="$personal['padron']"/>
+    </td>
 </tr><tr>
 
 $if len(areas) > 1:
-	<td>Orientación:</td>
-	<td><select name="area">
-	$for area in areas:
-		$if area[0] == 'COMUN':
-			$continue
-		$elif personal['area'] == area[0]:
-			<option selected value="$area[0]">$area[1]</option>
-		$else:
-			<option value="$area[0]">$area[1]</option>
-	</select></td>
+    <td>Orientación:</td>
+    <td><select name="area">
+    $for area in areas:
+        $if area[0] == 'COMUN':
+            $continue
+        $elif personal['area'] == area[0]:
+            <option selected value="$area[0]">$area[1]</option>
+        $else:
+            <option value="$area[0]">$area[1]</option>
+    </select></td>
 
 </tr><tr>
-	<td colspan="2" align="center">
-	<input type="submit" value="Actualizar datos"/>
-	</td>
+    <td colspan="2" align="center">
+    <input type="submit" value="Actualizar datos"/>
+    </td>
 </tr>
 </form>
 </table>
