@@ -4,8 +4,8 @@ import web
 
 import pages
 
-# Raiz del sitio, necesario para poner algunos links.
-# No tocar NADA salvo esto.
+# Site's root, necessary for some links.
+# Don't touch ANYTHING else but this.
 root = '/pf'
 
 static_dir = 'static/'
