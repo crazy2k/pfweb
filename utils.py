@@ -1,7 +1,7 @@
 import web
 
 #  Function generously provided by Anand Chitipothu. (Thanks, Anand!)
-def unflatten(d, seperator="--"):
+def unflatten(d, separator="--"):
     """Convert flattened data into nested form.
     
         >>> unflatten({"a": 1, "b--x": 2, "b--y": 3, "c--0": 4, "c--1": 5})
@@ -18,8 +18,8 @@ def unflatten(d, seperator="--"):
             return False
         
     def setvalue(data, k, v):
-        if '--' in k:
-            k, k2 = k.split(seperator, 1)
+        if separator in k:
+            k, k2 = k.split(separator, 1)
             setvalue(data.setdefault(k, {}), k2, v)
         else:
             data[k] = v
