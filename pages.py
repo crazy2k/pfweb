@@ -3,6 +3,7 @@ import os
 
 import web
 
+import config
 import server
 import utils
 
@@ -25,8 +26,8 @@ class login:
 class static:
     def GET(self):
         """By doing GET <URL for this page>?file=<file>, if the file
-        <file> is in the directory specified by static_dir, then its
-        content is returned.
+        <file> is in the directory specified by config.static_dir, then
+        its content is returned.
 
         The standard way to do this is by placing the files in a
         static/ directory placed where the script that runs the web.py
@@ -37,9 +38,7 @@ class static:
         """
         i = web.input()
 
-        static_dir = './static/'
-
-        fpath = os.path.join(static_dir, i.file)
+        fpath = os.path.join(config.static_dir, i.file)
         if os.path.isfile(fpath):
 
             # We choose the content-type by looking at the file's

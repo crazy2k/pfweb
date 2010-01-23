@@ -2,13 +2,11 @@
 
 import web
 
+import config
 import pages
 
-# Site's root, necessary for some links.
-# Don't touch ANYTHING else but this.
-root = '/pf'
 
-static_dir = 'static/'
+root = config.root
 
 urls = (
     root,                       'pages.login',
