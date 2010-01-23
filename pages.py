@@ -96,7 +96,7 @@ class index:
 
         personal = server.get_personal(sid)
         inicio = personal['inicio']
-        carrera_desc = server.get_carreras()[personal['carrera']]
+        carrera_desc = server.get_programs()[personal['carrera']]
         areas = server.get_areas(personal['carrera'])
         area_desc = areas[personal['area']]
         del areas
@@ -300,17 +300,17 @@ class pieces:
 
     @classmethod
     def facslist(cls, uni):
-        facs = server.get_facultades(uni).items()
+        facs = server.get_faculties(uni).items()
         return render._options_fac(facs)
 
     @classmethod
     def progslist(cls, uni, fac):
-        carrs = server.get_carreras(uni, fac).items()
+        carrs = server.get_programs(uni, fac).items()
         return render._options_prog(carrs)
 
     @classmethod
     def progdata(cls, num):
-        unis, facs, carrs = data_3tuple(itemized = True)
+        unis, facs, carrs = server.data_3tuple(itemized = True)
 
         uni_options = render._universidad_options(unis)
         fac_options = render._facultad_options(facs)
@@ -325,23 +325,7 @@ class pieces:
 
 
 
-def data_3tuple(uni = '', fac = '', itemized = False):
 
-        unis = server.get_universidades()
-        if not uni:
-            uni = unis.keys()[0]
-
-        facs = server.get_facultades(uni)
-        if not fac:
-            fac = facs.keys()[0].split('/')[-1]
-
-        carrs = server.get_carreras(uni, fac)
-
-        t = (unis, facs, carrs)
-        if itemized:
-            t = tuple(d.items() for d in t)
-
-        return t
 
 class register:
     def GET(self):
@@ -438,7 +422,7 @@ class listamaterias:
         sid = web.cookies('sid')['sid']
         personal = server.get_personal(sid)
         carrera = personal['carrera']
-        carrera_desc = server.get_carreras()[personal['carrera']]
+        carrera_desc = server.get_programs()[personal['carrera']]
         mat_dict = server.get_materias(personal['carrera'], '')
         mat_list = mat_dict.keys()
         mat_list.sort()

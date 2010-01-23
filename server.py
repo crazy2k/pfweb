@@ -5,16 +5,16 @@ conn = xmlrpclib.ServerProxy("http://localhost:8027")
 
 
 #
-# Funciones publicas
+# Public functions
 #
 
-def get_universidades():
+def get_universities():
     return conn.get_universidades()
 
-def get_facultades(uni = ''):
+def get_faculties(uni = ''):
     return conn.get_facultades(uni)
 
-def get_carreras(uni = '', fac = ''):
+def get_programs(uni = '', fac = ''):
     return conn.get_carreras(uni, fac)
 
 def get_areas(carrera):
@@ -35,7 +35,7 @@ def register(user, passwd):
 
 
 #
-# Funciones privadas (por usuario)
+# Private functions (per user)
 #
 
 def auth(user, passwd):
@@ -66,3 +66,26 @@ def get_para_cursar(sid):
     return conn.get_para_cursar(sid)
 
 
+def data_3tuple(uni = '', fac = '', itemized = False):
+    """Returns a 3-tuple which contains three dictionaries (itemized
+    if required) with the results of get_universities(),
+    get_faculties() and get_programs(), passing them the given
+    parameters.
+
+    """
+
+    unis = server.get_universities()
+    if not uni:
+        uni = unis.keys()[0]
+
+    facs = server.get_faculties(uni)
+    if not fac:
+        fac = facs.keys()[0].split('/')[-1]
+
+    carrs = server.get_programs(uni, fac)
+
+    t = (unis, facs, carrs)
+    if itemized:
+        t = tuple(d.items() for d in t)
+
+    return t
