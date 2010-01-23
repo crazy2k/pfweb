@@ -7,13 +7,12 @@ import server
 import utils
 
 
-
 render_in_context = web.template.render('templates/', base = 'layout')
 render = web.template.render('templates/')
 
 
 #
-# Paginas
+# Pages
 #
 
 class login:
@@ -285,8 +284,8 @@ class pieces:
     def GET(self):
         i = web.input()
 
-        avl_funcs = ['facslist', 'carrslist', 'datoscarrera',
-            'tabcarrera']
+        avl_funcs = ['facslist', 'progslist', 'progdata',
+            'progtab']
 
         if i.func in avl_funcs:
             # save requested function
@@ -302,27 +301,27 @@ class pieces:
     @classmethod
     def facslist(cls, uni):
         facs = server.get_facultades(uni).items()
-        return render._facultad_options(facs)
+        return render._options_fac(facs)
 
     @classmethod
-    def carrslist(cls, uni, fac):
+    def progslist(cls, uni, fac):
         carrs = server.get_carreras(uni, fac).items()
-        return render._carrera_options(carrs)
+        return render._options_prog(carrs)
 
     @classmethod
-    def datoscarrera(cls, num):
+    def progdata(cls, num):
         unis, facs, carrs = data_3tuple(itemized = True)
 
         uni_options = render._universidad_options(unis)
         fac_options = render._facultad_options(facs)
         carr_options = render._carrera_options(carrs)
 
-        return render._datoscarrera(num, uni_options,
+        return render._progdata(num, uni_options,
             fac_options, carr_options)
     
     @classmethod
-    def tabcarrera(cls, num):
-        return render._tab_carrera(num)
+    def progtab(cls, num):
+        return render._progtab(num)
 
 
 
@@ -348,8 +347,8 @@ class register:
     def GET(self):
         i = web.input(error = 0, num = 1)
 
-        datoscarrera = pieces.datoscarrera(i.num)
-        return render_in_context.register(i.error, datoscarrera)
+        progdata = pieces.progdata(i.num)
+        return render_in_context.register(i.error, progdata)
 
     def POST(self):
         i = web.input('username', 'passwd',
