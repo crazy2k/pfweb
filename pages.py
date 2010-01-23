@@ -76,6 +76,9 @@ class pieces:
             # call the function
             return f(**i)
 
+        else:
+            return web.notfound()
+
     @classmethod
     def facslist(cls, uni):
         facs = server.get_faculties(uni).items()
