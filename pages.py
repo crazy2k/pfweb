@@ -43,9 +43,9 @@ class static:
         if os.path.isfile(fpath):
 
             # We choose the content-type by looking at the file's
-            # extension. The mimetypes module could be used
-            # instead, but doing it by hand gives us the
-            # flexibility to choose what is most portable.
+            # extension. The mimetypes module could be used instead,
+            # but doing it by hand gives us the flexibility to choose
+            # what is most portable.
             ext = os.path.splitext(fpath)[1]
             if ext == '.css':
                 ctype = 'text/css'
@@ -61,6 +61,9 @@ class static:
             fd.close()
 
             return content
+
+        else:
+            return web.notfound()
 
 
 class mainhelp:
