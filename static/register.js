@@ -53,7 +53,7 @@ $(document).ready(function() {
 
         var num = num_from_sel(this);
 
-        $.get('pieces?func=carrslist&uni=' + uni + '&fac=' + fac,
+        $.get('pieces?func=progslist&uni=' + uni + '&fac=' + fac,
             function(data) {
                 var name = 'progdata/' + num + '/carr';
                 var s = $('select.carr_options[name = ' + name + ']');
