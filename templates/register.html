@@ -1,44 +1,45 @@
-$def with (error, datoscarrera)
+$def with (error, progdata)
 
-$var title: Registración
+$var title: Registration
 $var no_navbar: true
 
 $if error == '1':
-    <div class="errmessage">El nombre de usuario ya existe, por favor
-    elegí otro.</div>
+    <div class="errmessage">The username you chose is already in
+    use. Please, choose another one.</div>
 $elif error == '2':
-    <div class="errmessage">Ocurrió un error grabando tus datos.</div>
+    <div class="errmessage">An error ocurred while saving your
+    data.</div>
 
 <p>
-Para usar el sistema, hace falta que te registres eligiendo un nombre de
-usuario corto y sin espacios (o podés usar tu padrón si no estas muy
-ocurrente), una clave, y los demás campos que aparecen debajo.
+If you want to use the system, we need you to register. Please, choose a
+short username (without spaces), and a password. Then fill the rest of
+the form.
 </p>
 
 <form method="post" action="register">
     <table border="0" cellspacing="0">
     <tr>
-        <td>Nombre de usuario:</td>
+        <td>Username:</td>
         <td><input type="text" name="username" size="14"/></td>
     </tr>
     <tr>
-        <td>Clave:</td>
+        <td>Password:</td>
         <td><input type="password" name="passwd" size="14"/></td>
     </tr>
     <tr>
-        <td>Nombre real:</td>
+        <td>Real name:</td>
         <td><input type="text" name="nombre" size="30"/></td>
     </tr>
     </table>
 
     <ul class="idTabs">
-        <li><a class="selected" href="#datos_carrera_1">Carrera 1</a></li>
-        <li id="add_button_holder"><a class="add_button">+</a></li>
+        <li><a class="selected" href="#progdata_1">Program 1</a></li>
+        <li id="add_button_cont"><a class="add_button">+</a></li>
     </ul>
-    <div id="datoscarreras">
-        $:datoscarrera
+    <div id="progdata_cont">
+        $:progdata
     </div>
 
-    <input type="submit" value="Registrarme!" />
+    <input type="submit" value="Register!" />
 </form>
 
