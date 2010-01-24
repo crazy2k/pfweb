@@ -111,9 +111,9 @@ class pieces:
 
 class register:
     def GET(self):
-        i = web.input(error = 0, num = 1)
+        i = web.input(error = 0)
 
-        progdata = pieces.progdata(i.num)
+        progdata = pieces.progdata(1)
         return render_in_context.register(i.error, progdata)
 
     def POST(self):
