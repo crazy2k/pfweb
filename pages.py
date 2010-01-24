@@ -105,7 +105,6 @@ class pieces:
         return render._progtab(num)
 
 
-
 #
 # Ordinary pages
 #
