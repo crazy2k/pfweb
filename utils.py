@@ -1,6 +1,7 @@
 import web
 
-#  Function generously provided by Anand Chitipothu. (Thanks, Anand!)
+# Function generously provided by Anand Chitipothu (thanks, Anand!)
+# with some changes to suit my needs.
 def unflatten(d, separator="--"):
     """Convert flattened data into nested form.
     
@@ -10,12 +11,6 @@ def unflatten(d, separator="--"):
         {'a': [{'x': 1, 'y': 2}, {'x': 3, 'y': 4}]}
         
     """
-    def isint(k):
-        try:
-            int(k)
-            return True
-        except ValueError:
-            return False
         
     def setvalue(data, k, v):
         if separator in k:
@@ -23,21 +18,11 @@ def unflatten(d, separator="--"):
             setvalue(data.setdefault(k, {}), k2, v)
         else:
             data[k] = v
-            
-    def makelist(d):
-        """Convert d into a list if all the keys of d are integers."""
-        if isinstance(d, dict):
-            if all(isint(k) for k in d.keys()):
-                return [makelist(d[k]) for k in sorted(d.keys(), key=int)]
-            else:
-                return web.storage((k, makelist(v)) for k, v in d.items())
-        else:
-            return d
-            
+
     d2 = {}
     for k, v in d.items():
         setvalue(d2, k, v)
-    return makelist(d2)
+    return d2
 
 def filterstr(s):
     import string
