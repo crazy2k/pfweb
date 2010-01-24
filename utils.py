@@ -1,4 +1,7 @@
+import string
+
 import web
+
 
 # Function generously provided by Anand Chitipothu (thanks, Anand!)
 # with some changes to suit my needs.
@@ -24,9 +27,9 @@ def unflatten(d, separator="--"):
         setvalue(d2, k, v)
     return d2
 
-def filterstr(s):
-    import string
-    allowed = string.ascii_letters + string.digits
+nice_chars = string.ascii_letters + string.digits + '-_.'
+
+def filterstr(s, allowed = nice_chars):
     new = [c for c in s if c in allowed]
     new = string.join(new, '')
     return new
