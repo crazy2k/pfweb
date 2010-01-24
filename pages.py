@@ -117,15 +117,11 @@ class register:
         return render_in_context.register(i.error, progdata)
 
     def POST(self):
-        i = web.input('username', 'passwd',
-                nombre = '')
+        i = web.input('username', 'passwd', 'realname')
+        i = utils.unflatten(i, '/')
 
-        username = utils.filterstr(i.username)
-        username = username.lower()
-        passwd = utils.filterstr(i.passwd)
-
-        ret = server.register(username, passwd)
-        if ret != 0:
+        code, extra = server.register(username, passwd)
+        if code != 0:
             raise web.seeother('register?error=1')
 
         sid = server.auth(username, passwd)
