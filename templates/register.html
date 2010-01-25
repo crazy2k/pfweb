@@ -1,14 +1,23 @@
-$def with (error, username = '', passwd = '', realname = '', progdatas = [])
+$def with (error = (0, None), username = '', passwd = '', realname = '', progdatas = [])
 
 $var title: Registration
 $var no_navbar: true
 
-$if error == '1':
+$if error[0] == 1:
     <div class="errmessage">The username you chose is already in
     use. Please, choose a different one.</div>
-$elif error == '2':
+$elif error[0] == 2:
+    <div class="errmessage">The following fields contain invalid data
+    and need to be fixed in order to proceed with the registration:
+    <ul>
+    $if 'username' in error[1]:
+        <li>Username</li>
+    $if 'password' in error[1]:
+        <li>Password</li>
+    </div>
+$elif error[0] == 3:
     <div class="errmessage">An error ocurred while saving your
-    data.</div>
+    data: $error[1]</div>
 
 <p>
 If you want to use the system, we need you to register. Please, choose a
