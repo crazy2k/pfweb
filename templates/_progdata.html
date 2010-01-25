@@ -1,11 +1,13 @@
-$def with (num, uni_options, fac_options, carr_options)
+$def with (num, id = '', inid = '', inim = '', iniy = '', uni_options = (), fac_options = (), carr_options = ())
 
 <div id="progdata_$num" class="idTabs_content">
 
     <table>
     <tr>
         <td>Padrón:</td>
-        <td><input type="text" name="progdata/$num/padron" size="8" /></td>
+        <td>
+            <input type="text" name="progdata/$num/padron" size="8" value="$id" />
+        </td>
     </tr>
     <tr>
         <td>Universidad</td>
@@ -34,9 +36,9 @@ $def with (num, uni_options, fac_options, carr_options)
     <tr>
         <td>Fecha de inicio:</td>
         <td>
-          <input type="text" name="progdata/$num/inid" size="2"/> /
-          <input type="text" name="progdata/$num/inim" size="2"/> /
-          <input type="text" name="progdata/$num/iniy" value="2000" size="4"/>
+          <input type="text" name="progdata/$num/inid" size="2" value="$inid" /> /
+          <input type="text" name="progdata/$num/inim" size="2" value="$inim" /> /
+          <input type="text" name="progdata/$num/iniy" value="$iniy" size="4"/>
         </td>
     </tr>
     </table>

@@ -90,14 +90,20 @@ class pieces:
         return render._options_prog(carrs)
 
     @classmethod
-    def progdata(cls, num):
-        unis, facs, carrs = server.data_3tuple(itemized = True)
+    def progdata(cls, num, id = '', inid = '', inim = '', iniy = '', uni = '',
+        fac = '', prog = ''):
 
-        uni_options = render._options_uni(unis)
-        fac_options = render._options_fac(facs)
-        carr_options = render._options_prog(carrs)
+        unis, facs, carrs = server.data_3tuple(uni, fac, itemized = True)
 
-        return render._progdata(num, uni_options,
+        uni_options = render._options_uni(unis, selected = uni)
+
+        fac_code = uni + '/' + fac
+        fac_options = render._options_fac(facs, selected = fac_code)
+
+        prog_code = fac_code + '/' + prog
+        carr_options = render._options_prog(carrs, selected = prog_code)
+
+        return render._progdata(num, id, inid, inim, iniy, uni_options,
             fac_options, carr_options)
     
     @classmethod
@@ -114,7 +120,7 @@ class register:
         i = web.input(error = 0)
 
         progdata = pieces.progdata(1)
-        return render_in_context.register(i.error, progdata)
+        return render_in_context.register(i.error, progdatas = [progdata])
 
     def POST(self):
         i = web.input('username', 'passwd', 'realname')

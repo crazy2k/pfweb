@@ -1,4 +1,7 @@
-$def with (universidades)
+$def with (universidades, selected = None)
 
 $for code, name in universidades:
-    <option value="$code">$name</option>
+    $if code == selected:
+        <option value="$code" selected="selected">$name</option>
+    $else:
+        <option value="$code">$name</option>

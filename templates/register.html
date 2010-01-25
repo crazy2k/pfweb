@@ -1,4 +1,4 @@
-$def with (error, progdata)
+$def with (error, username = '', passwd = '', realname = '', progdatas = [])
 
 $var title: Registration
 $var no_navbar: true
@@ -20,23 +20,34 @@ the form.
     <table border="0" cellspacing="0">
     <tr>
         <td>Username:</td>
-        <td><input type="text" name="username" size="14"/></td>
+        <td>
+            <input type="text" name="username" size="14" value="$username" />
+        </td>
     </tr>
     <tr>
         <td>Password:</td>
-        <td><input type="password" name="passwd" size="14"/></td>
+        <td>
+            <input type="password" name="passwd" size="14" value="$passwd" />
+        </td>
     </tr>
     <tr>
         <td>Real name:</td>
-        <td><input type="text" name="realname" size="30"/></td>
+        <td>
+            <input type="text" name="realname" size="30" value="$realname" />
+        </td>
     </tr>
     </table>
 
     <ul class="idTabs">
-        <li><a class="selected" href="#progdata_1">Program 1</a></li>
-        <li id="add_button_cont"><a class="add_button">+</a></li>
+        $for i in range(1, len(progdatas) + 1):
+            $if i == 1:
+                <li><a class="selected" href="#progdata_$i">Program $i</a></li>
+            $else:
+                <li><a href="#progdata_$i">Program $i</a></li>
+    <li id="add_button_cont"><a class="add_button">+</a></li>
     </ul>
     <div id="progdata_cont">
+    $for progdata in progdatas:
         $:progdata
     </div>
 
