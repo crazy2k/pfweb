@@ -18,14 +18,14 @@ def unflatten(d, separator="--"):
     def setvalue(data, k, v):
         if separator in k:
             k, k2 = k.split(separator, 1)
-            setvalue(data.setdefault(k, {}), k2, v)
+            setvalue(data.setdefault(k, web.storage()), k2, v)
         else:
             data[k] = v
 
-    d2 = {}
+    d2 = web.storage()
     for k, v in d.items():
         setvalue(d2, k, v)
-    return web.storage((k, v) for k, v in d2.items())
+    return d2
 
 nice_chars = string.ascii_letters + string.digits + '-_.'
 
