@@ -6,13 +6,13 @@ $def with (num, id = '', inid = '', inim = '', iniy = '', uni_options = (), fac_
     <tr>
         <td>Padrón:</td>
         <td>
-            <input type="text" name="progdata/$num/padron" size="8" value="$id" />
+            <input type="text" name="progdatas/$num/padron" size="8" value="$id" />
         </td>
     </tr>
     <tr>
         <td>Universidad</td>
         <td>
-            <select class="uni_options" name="progdata/$num/uni">
+            <select class="uni_options" name="progdatas/$num/uni">
                 $:uni_options
             </select>
         </td>
@@ -20,7 +20,7 @@ $def with (num, id = '', inid = '', inim = '', iniy = '', uni_options = (), fac_
     <tr>
         <td>Facultad</td>
         <td>
-            <select class="fac_options" name="progdata/$num/fac">
+            <select class="fac_options" name="progdatas/$num/fac">
                 $:fac_options
             </select>
         </td>
@@ -28,7 +28,7 @@ $def with (num, id = '', inid = '', inim = '', iniy = '', uni_options = (), fac_
     <tr>
         <td>Carrera:</td>
         <td>
-            <select class="carr_options" name="progdata/$num/carr">
+            <select class="carr_options" name="progdatas/$num/carr">
                 $:carr_options
             </select>
         </td>
@@ -36,9 +36,9 @@ $def with (num, id = '', inid = '', inim = '', iniy = '', uni_options = (), fac_
     <tr>
         <td>Fecha de inicio:</td>
         <td>
-          <input type="text" name="progdata/$num/inid" size="2" value="$inid" /> /
-          <input type="text" name="progdata/$num/inim" size="2" value="$inim" /> /
-          <input type="text" name="progdata/$num/iniy" value="$iniy" size="4"/>
+          <input type="text" name="progdatas/$num/inid" size="2" value="$inid" /> /
+          <input type="text" name="progdatas/$num/inim" size="2" value="$inim" /> /
+          <input type="text" name="progdatas/$num/iniy" value="$iniy" size="4"/>
         </td>
     </tr>
     </table>
