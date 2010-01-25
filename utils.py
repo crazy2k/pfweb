@@ -25,7 +25,7 @@ def unflatten(d, separator="--"):
     d2 = {}
     for k, v in d.items():
         setvalue(d2, k, v)
-    return d2
+    return web.storage((k, v) for k, v in d2.items())
 
 nice_chars = string.ascii_letters + string.digits + '-_.'
 

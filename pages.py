@@ -96,12 +96,8 @@ class pieces:
         unis, facs, carrs = server.data_3tuple(uni, fac, itemized = True)
 
         uni_options = render._options_uni(unis, selected = uni)
-
-        fac_code = uni + '/' + fac
-        fac_options = render._options_fac(facs, selected = fac_code)
-
-        prog_code = fac_code + '/' + prog
-        carr_options = render._options_prog(carrs, selected = prog_code)
+        fac_options = render._options_fac(facs, selected = fac)
+        carr_options = render._options_prog(carrs, selected = prog)
 
         return render._progdata(num, id, inid, inim, iniy, uni_options,
             fac_options, carr_options)
@@ -126,27 +122,49 @@ class register:
         i = web.input('username', 'passwd', 'realname')
         i = utils.unflatten(i, '/')
 
-        code, extra = server.register(username, passwd)
-        if code != 0:
-            raise web.seeother('register?error=1')
+        progdatas = []
+        for num, progdata in i.progdatas.iteritems():
 
-        sid = server.auth(username, passwd)
-        personal = server.get_personal(sid)
-        personal['nombre'] = i.nombre
-        personal['padron'] = i.padron
-        personal['carrera'] = i.carrera
-        personal['hace_tesis'] = 0
-        personal['inicio'] = (int(i.inid), int(i.inim), int(i.iniy))
-        personal['area'] = server.get_areas(i.carrera).keys()[0]
-        ret = server.set_personal(sid, personal)
-        if not ret:
-            print personal
-            print ret
-            # XXX: (?) Ver que es esto...
-            return
-            raise web.seeother('register?error=2')
+            info = {}
+            info['id'] = progdata['padron']
+            info['uni'] = progdata['uni']
+            info['fac'] = progdata['fac']
+            info['prog'] = progdata['carr']
+            info['inid'] = progdata['inid']
+            info['inim'] = progdata['inim']
+            info['iniy'] = progdata['iniy']
 
-        raise web.seeother('login?register_ok=1')
+            progdatas.append(pieces.progdata(num, **info))
+
+        return render_in_context.register(0, i.username, i.passwd,
+            i.realname, progdatas)
+
+
+
+
+
+        if False:
+
+            code, extra = server.register(username, passwd)
+
+
+            sid = server.auth(username, passwd)
+            personal = server.get_personal(sid)
+            personal['nombre'] = i.nombre
+            personal['padron'] = i.padron
+            personal['carrera'] = i.carrera
+            personal['hace_tesis'] = 0
+            personal['inicio'] = (int(i.inid), int(i.inim), int(i.iniy))
+            personal['area'] = server.get_areas(i.carrera).keys()[0]
+            ret = server.set_personal(sid, personal)
+            if not ret:
+                print personal
+                print ret
+                # XXX: (?) Ver que es esto...
+                return
+                raise web.seeother('register?error=2')
+
+            raise web.seeother('login?register_ok=1')
 
 
 class login:

@@ -38,7 +38,7 @@ $(document).ready(function() {
 
         $.get('pieces?func=facslist&uni=' + uni,
             function(data) {
-                var name = 'progdata/' + num + '/fac';
+                var name = 'progdatas/' + num + '/fac';
                 var s = $('select.fac_options[name = ' + name + ']');
                 s.html(data);
                 s.trigger('change');
@@ -47,15 +47,16 @@ $(document).ready(function() {
 
     /* onchange event for fac's select */
     $('select.fac_options').live('change', function() {
-        var vals = val_from_sel(this).split('/');
-        var uni = vals[0];
-        var fac = vals[1];
-
         var num = num_from_sel(this);
+
+        var uni_opt = $('select.uni_options[name = progdatas/' + num + '/uni]');
+        var uni = val_from_sel(uni_opt);
+
+        var fac = val_from_sel(this);
 
         $.get('pieces?func=progslist&uni=' + uni + '&fac=' + fac,
             function(data) {
-                var name = 'progdata/' + num + '/carr';
+                var name = 'progdatas/' + num + '/carr';
                 var s = $('select.carr_options[name = ' + name + ']');
                 s.html(data);
             });
