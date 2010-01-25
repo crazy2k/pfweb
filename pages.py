@@ -136,7 +136,7 @@ class register:
 
             progdatas.append(pieces.progdata(num, **info))
 
-        return render_in_context.register(0, i.username, i.passwd,
+        return render_in_context.register(0, i.username, '',
             i.realname, progdatas)
 
 
