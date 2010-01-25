@@ -113,59 +113,70 @@ class pieces:
 
 class register:
     def GET(self):
-        i = web.input(error = 0)
+        i = web.input()
 
         progdata = pieces.progdata(1)
-        return render_in_context.register(i.error, progdatas = [progdata])
+        return render_in_context.register(progdatas = [progdata])
 
     def POST(self):
         i = web.input('username', 'passwd', 'realname')
         i = utils.unflatten(i, '/')
 
-        progdatas = []
-        for num, progdata in i.progdatas.iteritems():
+        def render_with_error(err, i):
+            # regenerate user's input
+            progdatas = []
+            for num, progdata in i.progdatas.iteritems():
+                info = {
+                        'id': progdata.padron,
+                        'uni': progdata.uni,
+                        'fac': progdata.fac,
+                        'prog': progdata.carr,
+                        'inid': progdata.inid,
+                        'inim': progdata.inim,
+                        'iniy': progdata.iniy,
+                    }
 
-            info = {}
-            info['id'] = progdata['padron']
-            info['uni'] = progdata['uni']
-            info['fac'] = progdata['fac']
-            info['prog'] = progdata['carr']
-            info['inid'] = progdata['inid']
-            info['inim'] = progdata['inim']
-            info['iniy'] = progdata['iniy']
+                progdatas.append(pieces.progdata(num, **info))
 
-            progdatas.append(pieces.progdata(num, **info))
+            return render_in_context.register(err, i.username, '',
+                i.realname, progdatas)
 
-        return render_in_context.register(0, i.username, '',
-            i.realname, progdatas)
+        err = server.register(i.username, i.passwd)
 
+        if err[0] != 0:
+            # error ocurred while registering
+            return render_with_error(err, i)
 
+        else:
 
+            sid = server.auth(i.username, i.passwd)
 
-
-        if False:
-
-            code, extra = server.register(username, passwd)
-
-
-            sid = server.auth(username, passwd)
             personal = server.get_personal(sid)
-            personal['nombre'] = i.nombre
-            personal['padron'] = i.padron
-            personal['carrera'] = i.carrera
-            personal['hace_tesis'] = 0
-            personal['inicio'] = (int(i.inid), int(i.inim), int(i.iniy))
-            personal['area'] = server.get_areas(i.carrera).keys()[0]
+
+            personal['realname'] = i.realname
+
+            personal['progdatas'] = []
+            for progdata in i.progdatas.itervalues():
+                pd_dict = {
+                        'id': progdata.padron,
+                        'uni': progdata.uni,
+                        'fac': progdata.fac,
+                        'prog': progdata.carr,
+                        'inid': progdata.inid,
+                        'inim': progdata.inim,
+                        'iniy': progdata.iniy,
+                    }
+                personal['progdatas'].append(pd_dict)
+
             ret = server.set_personal(sid, personal)
+
             if not ret:
-                print personal
-                print ret
-                # XXX: (?) Ver que es esto...
-                return
-                raise web.seeother('register?error=2')
+                err = (3, 'Registration succeeded but some data' +
+                    ' wasn\'t saved.')
+                return render_with_error(err, i)
 
-            raise web.seeother('login?register_ok=1')
-
+            return render_in_context.register_ok(i.username)
+ 
 
 class login:
     def GET(self):
