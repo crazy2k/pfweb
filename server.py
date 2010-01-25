@@ -47,6 +47,10 @@ def get_personal(sid):
 def set_personal(sid, dic):
     return conn.set_personal(sid, dic)
 
+def add_progdata_to_personal(sid, id, uni, fac, prog, inid, inim, iniy):
+    return conn.add_progdata_to_personal(sid, id, uni, fac, prog, inid, inim,
+        iniy)
+
 def set_passwd(sid, passwd):
     return conn.set_passwd(sid, passwd)
 
