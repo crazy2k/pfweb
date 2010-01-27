@@ -90,8 +90,8 @@ class pieces:
         return render._options_prog(carrs)
 
     @classmethod
-    def progdata(cls, num, id = '', inid = '', inim = '', iniy = '', uni = '',
-        fac = '', prog = ''):
+    def progdata(cls, num = 1, id = '', inid = '', inim = '', iniy = '',
+        uni = '', fac = '', prog = ''):
 
         unis, facs, carrs = server.data_3tuple(uni, fac, itemized = True)
 
