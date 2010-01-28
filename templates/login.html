@@ -1,40 +1,35 @@
-$def with (failed, register_ok)
+$def with (failed = False)
 
-$var title: planifi
+$var title: Authentication
 $var no_navbar: true
 
 $if failed:
-    Usuario y/o clave inválidos. Por favor intentá nuevamente.<p/>
+    <p>Username or passsword is invalid. Please, try again.</p>
 
-$if register_ok:
-    Tu registración se completo sin problemas. Ahora ingresá el usuario y la clave
-    que elegiste debajo, para comenzar a usar planifi!<br/>
-    <hr/>
-    <p/>
+<p>Hi, there! Please fill with your username and password to join planifi.</p>
 
-Hola! Por favor ingresa tu usuario y tu clave.<p/>
-
-<form method="post" action="auth">
+<form method="post" action="login">
 <table border="0" cellspacing="0">
 <tr>
     <td>Usuario:</td>
-    <td><input type="text" tabindex="0" name="user" size="10"/>
+    <td><input type="text" tabindex="0" name="username" size="10"/>
     </td>
 </tr><tr>
     <td>Clave:</td>
     <td><input type="password" name="passwd" size="10"/></td>
 </tr><tr>
     <td colspan="2" align="center">
-    <input type="submit" value="Entrar"/>
+    <input type="submit" value="Log in"/>
     </td>
 </tr>
 </table>
 </form>
 
 <p/>
-Si no tenés un usuario y una clave, podés <a href="register">registrarte
-acá</a>.<p/>
+<p>If you still don't have a username and password, you can sign up in
+the <a href="register">registration page</a>.</p>
 
+<p>If you want to know more about the system, check out our
 Si querés saber mas sobre el sistema, consulta la
-<a href="mainhelp">ayuda</a>.
+<a href="mainhelp">help page</a>.
 

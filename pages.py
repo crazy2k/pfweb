@@ -183,9 +183,18 @@ class register:
 
 class login:
     def GET(self):
-        i = web.input(failed = 0, register_ok = 0)
-        return render_in_context.login(failed = i.failed,
-            register_ok = i.register_ok)
+        i = web.input()
+        return render_in_context.login()
+
+    def POST(self):
+        i = web.input('username', 'passwd')
+
+        sid = server.auth(i.username, i.passwd)
+        if not sid:
+            return render_in_context.login(failed = True)
+
+        web.setcookie('sid', sid)
+        raise web.seeother("index")
 
 
 class mainhelp:
@@ -198,16 +207,7 @@ class mainhelp:
 
         return render_in_context.mainhelp(logged_in)
 
-class auth:
-    def POST(self):
-        i = web.input('user', 'passwd')
-        user = utils.filterstr(i.user).lower()
-        sid = server.auth(user, i.passwd)
-        if not sid:
-            raise web.seeother("login?failed=1")
-        web.setcookie('sid', sid)
-        raise web.seeother("index")
-
+    
 
 class logout:
     def GET(self):
