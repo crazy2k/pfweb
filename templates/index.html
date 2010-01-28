@@ -1,66 +1,16 @@
-$def with (personal, area_desc, carrera_desc, inicio, promedio, creditos, cantaprobadas, cursando, para_cursar, aprobadas)
+$def with (personal)
 
-$var title: Principal
+$var title: Home
 $var no_navbar: false
 
-$if personal['nombre']:
-    Hola $personal['nombre']!<p/>
+$if personal['realname']:
+    <p>Hi $personal['realname']!</p>
 $else:
-    Hola $personal['username']!<p/>
+    <p>Hola $personal['username']!</p>
 
-$if area_desc:
-    Estás estudiando $carrera_desc, orientación $area_desc.<br/>
-$else:
-    Estás estudiando $carrera_desc.<br/>
-
-$if inicio:
-    Comenzaste la carrera el $inicio[0]/$inicio[1]/$inicio[2].<br/>
-
-$if personal['padron']:
-    Tu padrón es $personal['padron'].<br/>
-
-$if promedio:
-    Tu promedio (sin aplazos) es $promedio.<br/>
-
-$if creditos:
-    Tenés $creditos créditos
-    $if cantaprobadas == 1:
-        y $cantaprobadas materia aprobada.<br/>
-    $else:
-        y $cantaprobadas materias aprobadas.<br/>
-
-<p/>
-
-$if cursando:
-    <h2>Estás cursando:</h2>
-    <ul>
-    $for mat in cursando:
-        <li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[1]
-        </li>
-    </ul>
-    <p/>
-$else:
-    <h4>No estás cursando materias.</h4>
-
-$if para_cursar:
-    <h2>Podés cursar:</h2>
-    <ul>
-    $for mat in para_cursar:
-        <li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[1]
-        </li>
-    </ul>
-    <p/>
-$else:
-    <h4>Las correlatividades no te permiten cursar otras materias.</h4>
-
-$if aprobadas:
-    <h2>Ténes aprobadas:</h2>
-    <ul>
-    $for mat in aprobadas:
-        <li><a href="datosmateria?cod=$mat[0]">$mat[0]</a>: $mat[2]
-        <b>($mat[1])</b></li>
-    </ul>
-    <p/>
-$else:
-    <h4>No tenés materias aprobadas.</h4>
-
+$for progdata in personal['progdatas']:
+    <div style="background-color: #E9EEF8;">
+        <h3>$progdata['prog']</h3>
+        <p><small>$progdata['uni']/$progdata['fac']</small></p>
+        <p>Promedio: 10<p>
+    </div>

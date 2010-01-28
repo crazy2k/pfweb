@@ -197,6 +197,55 @@ class login:
         raise web.seeother("index")
 
 
+class index:
+    def GET(self):
+        sid = web.cookies('sid')['sid']
+
+        personal = server.get_personal(sid)
+
+        if False:
+
+            inicio = personal['inicio']
+            carrera_desc = server.get_programs()[personal['carrera']]
+            areas = server.get_areas(personal['carrera'])
+            area_desc = areas[personal['area']]
+            del areas
+
+            cursando = server.get_cursando(sid).items()
+            cursando.sort()
+
+            para_cursar = server.get_para_cursar(sid).items()
+            para_cursar.sort()
+
+            apro_dict = server.get_aprobadas(sid)
+            promedio = 0.0
+            aprobadas = []
+            for key in apro_dict:
+                aprobadas.append([key] + apro_dict[key])
+                promedio += apro_dict[key][0]
+            if len(aprobadas):
+                promedio = promedio / len(aprobadas)
+            promedio = "%.2f" % promedio
+
+            aprobadas.sort()
+
+            creditos = 0
+            for key in apro_dict:
+                info = server.get_info_materia(personal['carrera'], key)
+                creditos += info['creditos']
+
+            cantaprobadas = len(aprobadas)
+
+            return render_in_context.index(personal = personal,
+                area_desc = area_desc, carrera_desc = carrera_desc,
+                inicio = inicio, promedio = promedio, creditos = creditos,
+                cantaprobadas = cantaprobadas, cursando = cursando,
+                para_cursar = para_cursar, aprobadas = aprobadas)
+
+        return render_in_context.index(personal)
+
+
+
 class mainhelp:
     def GET(self):
         sid = web.cookies(sid = None)['sid']
@@ -207,55 +256,12 @@ class mainhelp:
 
         return render_in_context.mainhelp(logged_in)
 
-    
 
 class logout:
     def GET(self):
         sid = web.cookies('sid')['sid']
         web.setcookie('sid', '')
         raise web.seeother("login")
-
-class index:
-    def GET(self):
-        sid = web.cookies('sid')['sid']
-
-        personal = server.get_personal(sid)
-        inicio = personal['inicio']
-        carrera_desc = server.get_programs()[personal['carrera']]
-        areas = server.get_areas(personal['carrera'])
-        area_desc = areas[personal['area']]
-        del areas
-
-        cursando = server.get_cursando(sid).items()
-        cursando.sort()
-
-        para_cursar = server.get_para_cursar(sid).items()
-        para_cursar.sort()
-
-        apro_dict = server.get_aprobadas(sid)
-        promedio = 0.0
-        aprobadas = []
-        for key in apro_dict:
-            aprobadas.append([key] + apro_dict[key])
-            promedio += apro_dict[key][0]
-        if len(aprobadas):
-            promedio = promedio / len(aprobadas)
-        promedio = "%.2f" % promedio
-
-        aprobadas.sort()
-
-        creditos = 0
-        for key in apro_dict:
-            info = server.get_info_materia(personal['carrera'], key)
-            creditos += info['creditos']
-
-        cantaprobadas = len(aprobadas)
-
-        return render_in_context.index(personal = personal,
-            area_desc = area_desc, carrera_desc = carrera_desc,
-            inicio = inicio, promedio = promedio, creditos = creditos,
-            cantaprobadas = cantaprobadas, cursando = cursando,
-            para_cursar = para_cursar, aprobadas = aprobadas)
 
 
 class setmateria:
