@@ -113,8 +113,6 @@ class pieces:
 
 class register:
     def GET(self):
-        i = web.input()
-
         progdata = pieces.progdata()
         return render_in_context.register(progdatas = [progdata])
 
@@ -182,8 +180,6 @@ class register:
             return render_in_context.register(e.err, i.username, '',
                 i.realname, progdatas)
 
-
- 
 
 class login:
     def GET(self):
