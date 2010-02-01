@@ -1,4 +1,4 @@
-var num = 1;
+var num = 0;
 
 $(document).ready(function() {
     /* onclick event for the button that adds tabs */

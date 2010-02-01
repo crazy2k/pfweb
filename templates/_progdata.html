@@ -1,40 +1,52 @@
-$def with (num, id = '', inid = '', inim = '', iniy = '', uni_options = (), fac_options = (), carr_options = ())
+$def with (num, id = '', inid = '', inim = '', iniy = '', uni_options = (), fac_options = (), carr_options = (), fully_editable = True)
 
 <div id="progdata_$num" class="idTabs_content">
 
     <table>
     <tr>
-        <td>Padrón:</td>
+        <td>ID number:</td>
         <td>
-            <input type="text" name="progdatas/$num/padron" size="8" value="$id" />
+            <input type="text" name="progdatas/$num/id" size="8" value="$id" />
         </td>
     </tr>
     <tr>
-        <td>Universidad</td>
+        <td>University:</td>
         <td>
-            <select class="uni_options" name="progdatas/$num/uni">
-                $:uni_options
+            $if fully_editable:
+                <select class="uni_options" name="progdatas/$num/uni">
+            $else:
+                <select class="uni_options" name="progdatas/$num/uni" disabled="disabled">
+
+            $:uni_options
             </select>
         </td>
     </tr>
     <tr>
-        <td>Facultad</td>
+        <td>Faculty:</td>
         <td>
-            <select class="fac_options" name="progdatas/$num/fac">
-                $:fac_options
+            $if fully_editable:
+                <select class="fac_options" name="progdatas/$num/fac">
+            $else:
+                <select class="fac_options" name="progdatas/$num/fac" disabled="disabled">
+
+            $:fac_options
             </select>
         </td>
     </tr>
     <tr>
-        <td>Carrera:</td>
+        <td>Program:</td>
         <td>
-            <select class="carr_options" name="progdatas/$num/carr">
-                $:carr_options
+            $if fully_editable:
+                <select class="carr_options" name="progdatas/$num/carr">
+            $else:
+                <select class="carr_options" name="progdatas/$num/carr" disabled="disabled">
+
+            $:carr_options
             </select>
         </td>
     </tr>
     <tr>
-        <td>Fecha de inicio:</td>
+        <td>Start date:</td>
         <td>
           <input type="text" name="progdatas/$num/inid" size="2" value="$inid" /> /
           <input type="text" name="progdatas/$num/inim" size="2" value="$inim" /> /

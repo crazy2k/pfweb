@@ -91,7 +91,7 @@ class pieces:
 
     @classmethod
     def progdata(cls, num = 1, id = '', inid = '', inim = '', iniy = '',
-        uni = '', fac = '', prog = ''):
+        uni = '', fac = '', prog = '', fully_editable = True):
 
         unis, facs, carrs = server.data_3tuple(uni, fac, itemized = True)
 
@@ -100,7 +100,7 @@ class pieces:
         carr_options = render._options_prog(carrs, selected = prog)
 
         return render._progdata(num, id, inid, inim, iniy, uni_options,
-            fac_options, carr_options)
+            fac_options, carr_options, fully_editable)
     
     @classmethod
     def progtab(cls, num):
@@ -113,12 +113,10 @@ class pieces:
 
 class register:
     def GET(self):
-        progdata = pieces.progdata()
-        return render_in_context.register(progdatas = [progdata])
+        return render_in_context.register()
 
     def POST(self):
-        i = web.input('username', 'passwd', 'realname')
-        i = utils.unflatten(i, '/')
+        i = web.input('username', 'passwd')
 
         class RegistrationError(Exception):
             def __init__(self, err):
@@ -131,54 +129,71 @@ class register:
             if err[0] != 0:
                 raise RegistrationError(err)
 
-            # user is registered; now its personal info is set
-            sid = server.auth(i.username, i.passwd)
+            if False:
+                # user is registered; now its personal info is set
+                sid = server.auth(i.username, i.passwd)
 
-            personal = server.get_personal(sid)
-            personal['realname'] = i.realname
+                personal = server.get_personal(sid)
+                personal['realname'] = i.realname
 
-            personal['progdatas'] = []
-            for progdata in i.progdatas.itervalues():
-                pd_dict = {
-                    'id': progdata.padron,
-                    'uni': progdata.uni,
-                    'fac': progdata.fac,
-                    'prog': progdata.carr,
-                    'inid': progdata.inid,
-                    'inim': progdata.inim,
-                    'iniy': progdata.iniy,
-                }
-                personal['progdatas'].append(pd_dict)
+                personal['progdatas'] = []
+                for progdata in i.progdatas.itervalues():
+                    pd_dict = {
+                        'id': progdata.padron,
+                        'uni': progdata.uni,
+                        'fac': progdata.fac,
+                        'prog': progdata.carr,
+                        'inid': progdata.inid,
+                        'inim': progdata.inim,
+                        'iniy': progdata.iniy,
+                    }
+                    personal['progdatas'].append(pd_dict)
 
-            print 'ha'
+                print 'ha'
 
-            ret = server.set_personal(sid, personal)
-            # error handling
-            if ret[0] != 0:
-                if ret[0] == 3 or ret[0] == 4:
+                ret = server.set_personal(sid, personal)
+                # error handling
+                if ret[0] != 0:
+                    if ret[0] == 3 or ret[0] == 4:
+                        print ret
+                        err = (3, 'Registration succeeded but some data' +
+                            ' wasn\'t saved.')
+                    else:
+                        err = ret
                     print ret
-                    err = (3, 'Registration succeeded but some data' +
-                        ' wasn\'t saved.')
-                else:
-                    err = ret
-                print ret
-                raise RegistrationError(err)
+                    raise RegistrationError(err)
 
             return render_in_context.register_ok(i.username)
         
         except RegistrationError as e:
-            # regenerate user's input
-            progdatas = []
-            for num, progdata in i.progdatas.iteritems():
-                html = pieces.progdata(num, id = progdata.padron,
-                    uni = progdata.uni, fac = progdata.fac,
-                    prog = progdata.carr, inid = progdata.inid,
-                    inim = progdata.inim, iniy = progdata.iniy)
-                progdatas.append(html)
+            if False:
+                # regenerate user's input
+                progdatas = []
+                for num, progdata in i.progdatas.iteritems():
+                    html = pieces.progdata(num, id = progdata.padron,
+                        uni = progdata.uni, fac = progdata.fac,
+                        prog = progdata.carr, inid = progdata.inid,
+                        inim = progdata.inim, iniy = progdata.iniy)
+                    progdatas.append(html)
 
             # passwd intentionally left blank
-            return render_in_context.register(e.err, i.username, '',
-                i.realname, progdatas)
+            return render_in_context.register(e.err, i.username, '')
+
+
+class account:
+    def GET(self):
+        sid = web.cookies('sid')['sid']
+
+        personal = server.get_personal(sid)
+
+        progdatas = []
+        for pd in personal['progdatas']:
+            num = len(progdatas) + 1
+            progdatas.append(piece.progdata(num, pd['id'], pd['inid'],
+                pd['inim'], pd['iniy'], pd['uni'], pd['fac'], pd['prog'],
+                fully_editable = False))
+
+        return render_in_context.account(personal['realname'], progdatas)
 
 
 class login:

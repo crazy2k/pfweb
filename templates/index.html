@@ -4,9 +4,13 @@ $var title: Home
 $var no_navbar: false
 
 $if personal['realname']:
-    <p>Hi $personal['realname']!</p>
+    <p>Hi, $personal['realname']!</p>
 $else:
-    <p>Hola $personal['username']!</p>
+    <p>Hi, $personal['username']!</p>
+
+$if not personal['progdatas']:
+    <p>You haven't added any programs yet.
+    <a href="addprograms">Account settings</a>.</p>
 
 $for progdata in personal['progdatas']:
     <div style="background-color: #E9EEF8;">

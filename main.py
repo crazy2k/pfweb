@@ -12,8 +12,11 @@ urls = (
     root,                       'pages.login',
     root + '/',                 'pages.login',
     root + '/login',            'pages.login',
-    root + '/logout',           'pages.logout',
+    root + '/register',         'pages.register',
     root + '/index',            'pages.index',
+    root + '/account',          'pages.account',
+
+    root + '/logout',           'pages.logout',
     root + '/setmateria',       'pages.setmateria',
     root + '/cursandomateria',  'pages.cursandomateria',
     root + '/corregirnota',     'pages.corregirnota',
@@ -21,7 +24,6 @@ urls = (
     root + '/listamaterias',    'pages.listamaterias',
     root + '/personal',         'pages.personal',
     root + '/chpasswd',         'pages.chpasswd',
-    root + '/register',         'pages.register',
     root + '/mainhelp',         'pages.mainhelp',
 
     root + '/pieces',           'pages.pieces',

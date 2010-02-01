@@ -1,4 +1,4 @@
-$def with (error = (0, None), username = '', passwd = '', realname = '', progdatas = [])
+$def with (error = (0, None), username = '', passwd = '')
 
 $var title: Registration
 $var no_navbar: true
@@ -10,27 +10,20 @@ $elif error[0] == 2:
     <div class="errmessage">The following fields contain invalid data
     and need to be fixed in order to proceed with the registration:
         <ul>
-        $for e in error[1]:
-            $if e == 'username':
-                <li>Username</li>
-            $elif e == 'password':
-                <li>Password</li>
-            $else:
-                <li>$e</li>
+        $for field, err_msg in error[1]:
+            <li>$field: $err_msg</li>
         </ul>
     </div>
 $elif error[0] == 3:
     <div class="errmessage">An error ocurred while saving your
     data: $error[1]</div>
 
-<p>
-If you want to use the system, we need you to register. Please, choose a
-short username (without spaces), and a password. Then fill the rest of
-the form.
-</p>
+<p>If you want to use the system, you need to register first.</p>
+
+<p>Please, choose a short username (without spaces), and a password.</p>
 
 <form method="post" action="register">
-    <table border="0" cellspacing="0">
+    <table>
     <tr>
         <td>Username:</td>
         <td>
@@ -43,27 +36,7 @@ the form.
             <input type="password" name="passwd" size="14" value="$passwd" />
         </td>
     </tr>
-    <tr>
-        <td>Real name:</td>
-        <td>
-            <input type="text" name="realname" size="30" value="$realname" />
-        </td>
-    </tr>
     </table>
-
-    <ul class="idTabs">
-        $for i in range(1, len(progdatas) + 1):
-            $if i == 1:
-                <li><a class="selected" href="#progdata_$i">Program $i</a></li>
-            $else:
-                <li><a href="#progdata_$i">Program $i</a></li>
-    <li id="add_button_cont"><a class="add_button">+</a></li>
-    </ul>
-    <div id="progdata_cont">
-    $for progdata in progdatas:
-        $:progdata
-    </div>
-
     <input type="submit" value="Register!" />
 </form>
 
